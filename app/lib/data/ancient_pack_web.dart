@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 /// Web 版不提供 37MB 的篆隶包（体积不划算），相关入口显示为不可用。
 class AncientPack {
   AncientPack._();

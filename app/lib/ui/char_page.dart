@@ -262,7 +262,6 @@ class _CharPageState extends State<CharPage> {
     );
   }
 
-
   Widget _ancientSection(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
     if (!AncientPack.supported) {
@@ -381,7 +380,7 @@ class _CharPageState extends State<CharPage> {
   }
 
   Widget _fontCompare(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

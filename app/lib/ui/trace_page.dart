@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../data/repository.dart';
-import 'char_page.dart';
 import 'widgets/practice_grid.dart';
 
 /// 数字临摹：在半透明范字上用手指/鼠标写，用来找结构感觉。
