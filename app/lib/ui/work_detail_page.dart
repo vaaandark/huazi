@@ -262,7 +262,11 @@ class _WorkDetailPageState extends State<WorkDetailPage> {
     Navigator.of(context).push(
       MaterialPageRoute(
         fullscreenDialog: true,
-        builder: (_) => _FullImagePage(remote: img.remote!, caption: widget.work.title),
+        builder: (_) => _FullImagePage(
+          remote: img.remote!,
+          caption: widget.work.title,
+          fallbackAsset: img.assetPath,
+        ),
       ),
     );
   }
@@ -438,10 +442,15 @@ class _WorkDetailPageState extends State<WorkDetailPage> {
 }
 
 class _FullImagePage extends StatelessWidget {
-  const _FullImagePage({required this.remote, required this.caption});
+  const _FullImagePage({
+    required this.remote,
+    required this.caption,
+    this.fallbackAsset,
+  });
 
   final String remote;
   final String caption;
+  final String? fallbackAsset;
 
   @override
   Widget build(BuildContext context) {
@@ -480,13 +489,27 @@ class _FullImagePage extends StatelessWidget {
                 ),
               );
             },
-            errorBuilder: (_, __, ___) => const Padding(
-              padding: EdgeInsets.all(32),
-              child: Text(
-                '无法载入原图，请检查网络',
-                style: TextStyle(color: Colors.white70),
-              ),
-            ),
+            errorBuilder: (_, __, ___) => fallbackAsset == null
+                ? const Padding(
+                    padding: EdgeInsets.all(32),
+                    child: Text(
+                      '无法载入原图，请检查网络',
+                      style: TextStyle(color: Colors.white70),
+                    ),
+                  )
+                : Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // 网页版受跨域限制，退回到内置的 640px 图
+                      Image.asset(fallbackAsset!, fit: BoxFit.contain),
+                      const SizedBox(height: 12),
+                      const Text(
+                        '高清原图受跨域限制，当前显示内置缩略图\n用桌面版或手机版可查看原图',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Colors.white70, fontSize: 12, height: 1.6),
+                      ),
+                    ],
+                  ),
           ),
         ),
       ),

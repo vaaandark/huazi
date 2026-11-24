@@ -200,7 +200,8 @@ def cmd_fonts(args: argparse.Namespace) -> int:
     out_dir = config.ROOT / "app" / "assets" / "fonts"
     jobs = {
         "LXGWWenKaiGB-Regular.ttf": "wenkai.ttf",
-        "ZhiMangXing-Regular.ttf": "xingkai.ttf",
+        "ZhiMangXing-Regular.ttf": "xingshu.ttf",
+        "Xiaolai-Regular.ttf": "xiaolai.ttf",
     }
     for src_name, dst_name in jobs.items():
         src = src_dir / src_name

@@ -388,9 +388,11 @@ class _CharPageState extends State<CharPage> {
         const SizedBox(height: 10),
         Row(
           children: [
-            _fontTile(context, 'wenkai', '文楷 · 硬笔楷'),
-            const SizedBox(width: 12),
-            _fontTile(context, 'xingkai', '行楷'),
+            _fontTile(context, 'wenkai', '文楷 · 标准楷'),
+            const SizedBox(width: 8),
+            _fontTile(context, 'xiaolai', '小赖 · 手写楷'),
+            const SizedBox(width: 8),
+            _fontTile(context, 'xingshu', '志莽 · 行书'),
           ],
         ),
         const SizedBox(height: 20),
@@ -404,7 +406,8 @@ class _CharPageState extends State<CharPage> {
     final selected = _font == family;
     final f = switch (family) {
       'wenkai' => 'WenKai',
-      'xingkai' => 'XingKai',
+      'xiaolai' => 'Xiaolai',
+      'xingshu' => 'XingShu',
       _ => null,
     };
     return Expanded(

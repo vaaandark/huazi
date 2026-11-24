@@ -35,9 +35,12 @@ flutter:
     - family: WenKai
       fonts:
         - asset: assets/fonts/wenkai.ttf
-    - family: XingKai
+    - family: XingShu
       fonts:
-        - asset: assets/fonts/xingkai.ttf
+        - asset: assets/fonts/xingshu.ttf
+    - family: Xiaolai
+      fonts:
+        - asset: assets/fonts/xiaolai.ttf
 
 flutter_launcher_icons:
   android: true

@@ -34,7 +34,11 @@ class _TracePageState extends State<TracePage> {
             tooltip: '换字体',
             icon: const Icon(Icons.font_download_outlined),
             onPressed: () => setState(
-              () => _family = _family == 'WenKai' ? 'XingKai' : 'WenKai',
+              () => _family = switch (_family) {
+                'WenKai' => 'Xiaolai',
+                'Xiaolai' => 'XingShu',
+                _ => 'WenKai',
+              },
             ),
           ),
           IconButton(
