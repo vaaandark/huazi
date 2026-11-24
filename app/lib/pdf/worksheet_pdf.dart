@@ -22,6 +22,7 @@ class WorksheetOptions {
   final int cols;
   final int rows;
   final ByteData? fontBytes; // 用户导入字体时直接给字节
+  final bool vertical; // true = 竖排（每列一字，从右往左）
 
   const WorksheetOptions({
     required this.text,
@@ -31,6 +32,7 @@ class WorksheetOptions {
     this.cols = 10,
     this.rows = 12,
     this.fontBytes,
+    this.vertical = false,
   });
 
   String get traceLabel => traceAlpha == 0
@@ -38,9 +40,13 @@ class WorksheetOptions {
       : traceAlpha < 0.4
           ? '浅描'
           : '描红';
+
+  String get directionLabel => vertical ? '竖排' : '横排';
 }
 
-/// A4 字帖：每行练一个字，首格实写，其余描红/浅描/空白。
+/// A4 字帖。
+/// 横排：每行练一个字，首格实写，其余描红。
+/// 竖排：每列练一个字，从右往左，首格（最上）实写。
 class WorksheetPdf {
   static Future<Uint8List> build(WorksheetOptions opt) async {
     final data = opt.fontBytes ?? await rootBundle.load(opt.fontAsset);
@@ -48,7 +54,8 @@ class WorksheetPdf {
     final doc = pw.Document();
 
     final chars = opt.text.replaceAll(RegExp(r'\s'), '').split('');
-    final pageCount = (chars.length / opt.rows).ceil().clamp(1, 999);
+    final perPage = opt.vertical ? opt.cols * opt.rows : opt.rows;
+    final pageCount = (chars.length / perPage).ceil().clamp(1, 999);
 
     for (var p = 0; p < pageCount; p++) {
       doc.addPage(
@@ -62,37 +69,37 @@ class WorksheetPdf {
                 mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                 children: [
                   pw.Text(
-                    '字帖 · ${opt.grid.label} · ${opt.traceLabel}',
-                    style: pw.TextStyle(font: font, fontSize: 9, color: PdfColors.grey700),
+                    '字帖 · ${opt.directionLabel} · ${opt.grid.label} · ${opt.traceLabel}',
+                    style: pw.TextStyle(
+                      font: font,
+                      fontSize: 9,
+                      color: PdfColors.grey700,
+                    ),
                   ),
                   pw.Text(
                     ' huazi ',
-                    style: pw.TextStyle(font: font, fontSize: 9, color: PdfColors.grey500),
+                    style: pw.TextStyle(
+                      font: font,
+                      fontSize: 9,
+                      color: PdfColors.grey500,
+                    ),
                   ),
                 ],
               ),
               pw.SizedBox(height: 6),
               pw.Expanded(
-                child: pw.Column(
-                  children: [
-                    for (var r = 0; r < opt.rows; r++)
-                      pw.Expanded(
-                        child: pw.Row(
-                          children: [
-                            for (var c = 0; c < opt.cols; c++)
-                              pw.Expanded(
-                                child: _cell(opt, font, _charAt(chars, p, r, opt.rows), c),
-                              ),
-                          ],
-                        ),
-                      ),
-                  ],
-                ),
+                child: opt.vertical
+                    ? _verticalGrid(opt, font, chars, p)
+                    : _horizontalGrid(opt, font, chars, p),
               ),
               pw.SizedBox(height: 4),
               pw.Text(
                 '${p + 1} / $pageCount',
-                style: pw.TextStyle(font: font, fontSize: 8, color: PdfColors.grey500),
+                style: pw.TextStyle(
+                  font: font,
+                  fontSize: 8,
+                  color: PdfColors.grey500,
+                ),
               ),
             ],
           ),
@@ -102,13 +109,72 @@ class WorksheetPdf {
     return doc.save();
   }
 
-  static String _charAt(List<String> chars, int page, int row, int rows) {
-    final i = page * rows + row;
-    return i < chars.length ? chars[i] : '';
+  static pw.Widget _horizontalGrid(
+    WorksheetOptions opt,
+    pw.Font font,
+    List<String> chars,
+    int page,
+  ) {
+    return pw.Column(
+      children: [
+        for (var r = 0; r < opt.rows; r++)
+          pw.Expanded(
+            child: pw.Row(
+              children: [
+                for (var c = 0; c < opt.cols; c++)
+                  pw.Expanded(
+                    child: _cell(
+                      opt,
+                      font,
+                      _charAt(chars, page * opt.rows + r),
+                      c == 0,
+                    ),
+                  ),
+              ],
+            ),
+          ),
+      ],
+    );
   }
 
-  static pw.Widget _cell(WorksheetOptions opt, pw.Font font, String ch, int col) {
-    final isDemo = col == 0;
+  static pw.Widget _verticalGrid(
+    WorksheetOptions opt,
+    pw.Font font,
+    List<String> chars,
+    int page,
+  ) {
+    // 从右往左：第一列放在最右
+    return pw.Row(
+      children: [
+        for (var c = opt.cols - 1; c >= 0; c--)
+          pw.Expanded(
+            child: pw.Column(
+              children: [
+                for (var r = 0; r < opt.rows; r++)
+                  pw.Expanded(
+                    child: _cell(
+                      opt,
+                      font,
+                      _charAt(chars, page * opt.cols + c),
+                      r == 0,
+                    ),
+                  ),
+              ],
+            ),
+          ),
+      ],
+    );
+  }
+
+  static String _charAt(List<String> chars, int i) =>
+      i >= 0 && i < chars.length ? chars[i] : '';
+
+  static pw.Widget _cell(
+    WorksheetOptions opt,
+    pw.Font font,
+    String ch,
+    bool isDemo,
+  ) {
     final color = isDemo
         ? PdfColors.black
         : opt.traceAlpha >= 0.4

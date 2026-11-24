@@ -33,9 +33,12 @@ class Repository {
       args.add(filter.carrier);
     }
     if (filter.query.trim().isNotEmpty) {
-      where.add('(title LIKE ? OR author LIKE ? OR summary LIKE ?)');
+      where.add(
+        '(title LIKE ? OR author LIKE ? OR summary LIKE ? '
+        'OR COALESCE(transcription, \'\') LIKE ?)',
+      );
       final q = '%${filter.query.trim()}%';
-      args.addAll([q, q, q]);
+      args.addAll([q, q, q, q]);
     }
     final sql = '''
       SELECT * FROM work

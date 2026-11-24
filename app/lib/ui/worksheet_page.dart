@@ -30,6 +30,7 @@ class _WorksheetPageState extends State<WorksheetPage> {
   String _font = 'assets/fonts/wenkai.ttf';
   bool _busy = false;
   int _mode = 0; // 0 横排 / 1 竖排 / 2 字帖
+  bool _sheetVertical = false;
   double _size = 40;
 
   static const _common =
@@ -58,6 +59,7 @@ class _WorksheetPageState extends State<WorksheetPage> {
           traceAlpha: _trace,
           fontAsset: _font,
           fontBytes: _font == 'user' ? UserFont.bytes : null,
+          vertical: _sheetVertical,
         ),
       );
       final now = DateTime.now();
@@ -134,6 +136,21 @@ class _WorksheetPageState extends State<WorksheetPage> {
               ),
           ],
         ),
+        if (_mode == 2) ...[
+          const SizedBox(height: 16),
+          _sectionTitle(context, '排向'),
+          Wrap(
+            spacing: 8,
+            children: [
+              for (final (label, v) in [('横排', false), ('竖排', true)])
+                ChoiceChip(
+                  label: Text(label),
+                  selected: _sheetVertical == v,
+                  onSelected: (_) => setState(() => _sheetVertical = v),
+                ),
+            ],
+          ),
+        ],
         const SizedBox(height: 16),
         _sectionTitle(context, '描红档位'),
         Wrap(
@@ -215,6 +232,7 @@ class _WorksheetPageState extends State<WorksheetPage> {
             grid: _grid,
             traceAlpha: _trace,
             fontFamily: _familyName,
+            vertical: _sheetVertical,
           )
         else
           TextPreview(

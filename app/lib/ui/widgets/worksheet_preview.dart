@@ -13,6 +13,7 @@ class WorksheetPreview extends StatefulWidget {
     required this.fontFamily,
     this.cols = 10,
     this.rows = 12,
+    this.vertical = false,
   });
 
   final String text;
@@ -21,6 +22,7 @@ class WorksheetPreview extends StatefulWidget {
   final String fontFamily;
   final int cols;
   final int rows;
+  final bool vertical;
 
   @override
   State<WorksheetPreview> createState() => _WorksheetPreviewState();
@@ -32,8 +34,12 @@ class _WorksheetPreviewState extends State<WorksheetPreview> {
   List<String> get _chars =>
       widget.text.replaceAll(RegExp(r'\s'), '').split('');
 
-  int get _pageCount =>
-      (_chars.length / widget.rows).ceil().clamp(1, 999);
+  int get _pageCount {
+    final perPage = widget.vertical
+        ? widget.cols * widget.rows
+        : widget.rows;
+    return (_chars.length / perPage).ceil().clamp(1, 999);
+  }
 
   @override
   void didUpdateWidget(covariant WorksheetPreview old) {
@@ -90,26 +96,47 @@ class _WorksheetPreviewState extends State<WorksheetPreview> {
                     ),
                   ],
                 ),
-                child: Column(
-                  children: [
-                    for (var r = 0; r < widget.rows; r++)
-                      Expanded(
-                        child: Row(
-                          children: [
-                            for (var col = 0; col < widget.cols; col++)
-                              Expanded(
-                                child: _cell(
-                                  context,
-                                  _charAt(r),
-                                  col == 0,
-                                  cellW,
-                                ),
+                child: widget.vertical
+                    ? Row(
+                        children: [
+                          for (var c = widget.cols - 1; c >= 0; c--)
+                            Expanded(
+                              child: Column(
+                                children: [
+                                  for (var r = 0; r < widget.rows; r++)
+                                    Expanded(
+                                      child: _cell(
+                                        context,
+                                        _charAtColumn(c),
+                                        r == 0,
+                                        cellW,
+                                      ),
+                                    ),
+                                ],
                               ),
-                          ],
-                        ),
+                            ),
+                        ],
+                      )
+                    : Column(
+                        children: [
+                          for (var r = 0; r < widget.rows; r++)
+                            Expanded(
+                              child: Row(
+                                children: [
+                                  for (var col = 0; col < widget.cols; col++)
+                                    Expanded(
+                                      child: _cell(
+                                        context,
+                                        _charAt(r),
+                                        col == 0,
+                                        cellW,
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            ),
+                        ],
                       ),
-                  ],
-                ),
               ),
             );
           },
@@ -127,6 +154,13 @@ class _WorksheetPreviewState extends State<WorksheetPreview> {
 
   String _charAt(int row) {
     final i = _page * widget.rows + row;
+    final chars = _chars;
+    return i < chars.length ? chars[i] : '';
+  }
+
+  String _charAtColumn(int col) {
+    final perPage = widget.cols * widget.rows;
+    final i = _page * perPage + col * widget.rows;
     final chars = _chars;
     return i < chars.length ? chars[i] : '';
   }
