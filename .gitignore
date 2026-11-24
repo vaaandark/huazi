@@ -34,3 +34,6 @@ datakit/.venv/
 
 # 本地发布物
 dist/
+
+# 第三方数据（由 tool/fetch-glyphs.sh 重建）
+data/vendor/
