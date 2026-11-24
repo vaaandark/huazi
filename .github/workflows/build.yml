@@ -27,10 +27,15 @@ jobs:
           cache: true
 
       - name: Build
+        shell: bash
         run: |
           cd app
           flutter pub get
-          flutter build ${{ matrix.target }} --release
+          if [ "${{ matrix.target }}" = "macos" ]; then
+            flutter build macos --release --no-codesign
+          else
+            flutter build ${{ matrix.target }} --release
+          fi
 
       - uses: actions/upload-artifact@v4
         with:
