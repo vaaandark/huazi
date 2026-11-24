@@ -1,4 +1,4 @@
-import 'package:sqlite3/sqlite3.dart' show ResultSet;
+import 'package:sqlite3/common.dart' show ResultSet;
 
 import 'database.dart';
 import 'models.dart';

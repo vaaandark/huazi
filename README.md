@@ -35,6 +35,12 @@ Android 与桌面端共用一套 Flutter 代码，数据全部内置，**断网�
 
 > 见 [docs/screenshots](docs/screenshots)
 
+## 在线试用
+
+**https://vaaandark.top/huazi/** — Flutter WASM 版，无需安装。
+数据内置在 14MB 的 SQLite 里，由 `sqlite3.wasm` 通过自定义只读 VFS 直接打开。
+（网页版不提供 37MB 的篆隶字形包下载。）
+
 ## 安装
 
 从 [Releases](https://github.com/vaaandark/huazi/releases) 下载：
@@ -89,7 +95,7 @@ huazi/
 ├── data/
 │   ├── works/*.yaml          ★ 唯一需要长期维护的资产
 │   └── charlists/            6763 / 3755 / 3008 字表
-├── app/                      Flutter
+├── app/                      Flutter（Android/Linux/Windows/WASM）
 │   ├── lib/data/             SQLite、篆隶包、生字本
 │   ├── lib/pdf/              字帖排版
 │   └── lib/ui/               页面

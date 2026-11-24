@@ -122,11 +122,10 @@ class _WorksPageState extends State<WorksPage> {
             },
           ),
         ),
-        SizedBox(
-          height: 44,
-          child: ListView(
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 12),
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          child: Row(
             children: [
               _scriptChip(context, null, '全部'),
               for (final e in scriptLabels.entries)
@@ -231,18 +230,31 @@ class _WorksPageState extends State<WorksPage> {
   }
 
   Widget _scriptChip(BuildContext context, String? key, String label) {
+    final scheme = Theme.of(context).colorScheme;
     final selected = _filter.script == key;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
-      child: ChoiceChip(
-        label: Text(label),
-        selected: selected,
-        onSelected: (_) => _setScript(key),
-        labelStyle: TextStyle(
-          fontSize: 13,
-          color: selected
-              ? Theme.of(context).colorScheme.onSecondaryContainer
-              : null,
+      child: Material(
+        color: selected ? scheme.secondaryContainer : Colors.transparent,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+          side: BorderSide(
+            color: selected ? scheme.secondaryContainer : scheme.outlineVariant,
+          ),
+        ),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(20),
+          onTap: () => _setScript(key),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+            child: Text(
+              label,
+              style: TextStyle(
+                fontSize: 13,
+                color: selected ? scheme.onSecondaryContainer : scheme.onSurfaceVariant,
+              ),
+            ),
+          ),
         ),
       ),
     );

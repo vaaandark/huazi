@@ -264,6 +264,14 @@ class _CharPageState extends State<CharPage> {
 
   Widget _ancientSection(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
+    if (!AncientPack.supported) {
+      return Text(
+        '篆隶字形包体积较大，网页版不提供；桌面版与手机版可按需下载。',
+        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+              color: scheme.onSurfaceVariant,
+            ),
+      );
+    }
     if (!_packReady) {
       return Container(
         padding: const EdgeInsets.all(14),

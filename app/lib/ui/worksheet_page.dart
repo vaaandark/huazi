@@ -1,11 +1,7 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:path/path.dart' as p;
-import 'package:path_provider/path_provider.dart';
-import 'package:share_plus/share_plus.dart';
 
 import '../pdf/worksheet_pdf.dart';
+import '../util/save_pdf.dart';
 
 class WorksheetPage extends StatefulWidget {
   const WorksheetPage({super.key});
@@ -48,40 +44,23 @@ class _WorksheetPageState extends State<WorksheetPage> {
           fontAsset: _font,
         ),
       );
-      final dir = await getApplicationDocumentsDirectory();
-      final out = Directory(p.join(dir.path, 'huazi'));
-      await out.create(recursive: true);
       final now = DateTime.now();
       final name =
           '字帖-${now.year}${now.month.toString().padLeft(2, '0')}${now.day.toString().padLeft(2, '0')}-'
           '${now.hour.toString().padLeft(2, '0')}${now.minute.toString().padLeft(2, '0')}.pdf';
-      final file = File(p.join(out.path, name));
-      await file.writeAsBytes(bytes, flush: true);
-
+      final result = await savePdf(bytes, name);
       if (!mounted) return;
       setState(() => _busy = false);
-      if (Platform.isAndroid || Platform.isIOS) {
-        await SharePlus.instance.share(
-          ShareParams(
-            files: [XFile(file.path, mimeType: 'application/pdf')],
-            text: '字帖',
-          ),
-        );
-      } else {
-        await showDialog<void>(
-          context: context,
-          builder: (ctx) => AlertDialog(
-            title: const Text('字帖已生成'),
-            content: SelectableText(file.path),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(ctx),
-                child: const Text('关闭'),
-              ),
-            ],
-          ),
-        );
-      }
+      await showDialog<void>(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: const Text('字帖已生成'),
+          content: SelectableText(result),
+          actions: [
+            TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('好')),
+          ],
+        ),
+      );
     } catch (e) {
       if (!mounted) return;
       setState(() => _busy = false);
@@ -183,7 +162,7 @@ class _WorksheetPageState extends State<WorksheetPage> {
         ),
         const SizedBox(height: 10),
         Text(
-          Platform.isAndroid ? '生成后会调起系统分享，可存到文件或直接打印。' : '生成后保存到文档目录，可用阅读器打开打印。',
+          '生成后可直接下载/保存，用阅读器打开打印。',
           style: Theme.of(context).textTheme.labelSmall?.copyWith(
                 color: scheme.onSurfaceVariant,
               ),
