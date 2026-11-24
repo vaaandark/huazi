@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../pdf/worksheet_pdf.dart';
 import '../data/user_font.dart';
 import '../util/save_pdf.dart';
+import 'widgets/text_preview.dart';
 import 'widgets/worksheet_preview.dart';
 
 class WorksheetPage extends StatefulWidget {
@@ -28,6 +29,8 @@ class _WorksheetPageState extends State<WorksheetPage> {
   double _trace = 0.28;
   String _font = 'assets/fonts/wenkai.ttf';
   bool _busy = false;
+  int _mode = 0; // 0 横排 / 1 竖排 / 2 字帖
+  double _size = 40;
 
   static const _common =
       '的一是在不了有和人这中大为上个国我以要他时来用们生到作地于出就分对成会可主发年动同工也能下过子说产种面而方后多定行学法所民得经十三之进着等部度家电力里如水化高自二理起小物现实加量都两体制机当使点从业本去把性好应开它合还因由其些然前外天政四日那社义事平形相全表间样与关各重新线内数正心反你明看原又么利比或但质气第向道命此变条只没结解问意建月公无系军很情者最立代想已通并提直题党程展五果料象员革位入常文总次品式活设及管特件长求老头基资边流路级少图山统接知较将组见计别她手角期根论运农指几九区强放决西被干做必战先回则任取据处队南给色光门即保治北造百规热领七海口东导器压志世金增争济阶油思术极交受联什认六共权收证改清己美再采转更单风切打白教速花带安场身车例真务具万每目至达走积示议声报斗完类八离华名确才科张信马节话米整空元况今集温传土许步群广石记需段研界拉林律叫且究观越织装影算低持音众书布复容儿须际商非验连断深难近矿千周委素技备半办青省列习响约支般史感劳便团往酸历市克何除消构府称太准精值号率族维划选标写存候毛亲快效斯院查江型眼王按格养易置派层片始却专状育厂京识适属圆包火住调满县局照参红细引听该铁价严龙飞';
@@ -88,12 +91,13 @@ class _WorksheetPageState extends State<WorksheetPage> {
     return ListView(
       padding: const EdgeInsets.fromLTRB(20, 16, 20, 40),
       children: [
-        Text('生成字帖', style: Theme.of(context).textTheme.titleLarge),
+        Text('练字', style: Theme.of(context).textTheme.titleLarge),
         const SizedBox(height: 4),
         Text(
-          'A4 排版，每行练一个字：首格实写，其余按描红档位排。',
+          '只想看字怎么写，用「横排 / 竖排」；要打印出来练，用「字帖」并导出 PDF。',
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
                 color: scheme.onSurfaceVariant,
+                height: 1.6,
               ),
         ),
         const SizedBox(height: 16),
@@ -166,17 +170,61 @@ class _WorksheetPageState extends State<WorksheetPage> {
             ],
           ),
         ),
-        const SizedBox(height: 24),
-        WorksheetPreview(
-          text: _text.text,
-          grid: _grid,
-          traceAlpha: _trace,
-          fontFamily: _font == 'user'
-              ? UserFont.family
-              : _font.contains('xingshu')
-                  ? 'XingShu'
-                  : 'WenKai',
+        const SizedBox(height: 20),
+        Text('预览方式', style: Theme.of(context).textTheme.titleSmall),
+        const SizedBox(height: 6),
+        Wrap(
+          spacing: 8,
+          children: [
+            for (final (i, label) in [
+              (0, '横排'),
+              (1, '竖排'),
+              (2, '字帖格子'),
+            ])
+              ChoiceChip(
+                label: Text(label),
+                selected: _mode == i,
+                onSelected: (_) => setState(() => _mode = i),
+              ),
+          ],
         ),
+        if (_mode != 2)
+          Row(
+            children: [
+              Text('字号', style: Theme.of(context).textTheme.labelMedium),
+              Expanded(
+                child: Slider(
+                  value: _size,
+                  min: 24,
+                  max: 80,
+                  divisions: 14,
+                  label: '${_size.round()}',
+                  onChanged: (v) => setState(() => _size = v),
+                ),
+              ),
+              SizedBox(
+                width: 28,
+                child: Text('${_size.round()}',
+                    textAlign: TextAlign.end,
+                    style: Theme.of(context).textTheme.labelMedium),
+              ),
+            ],
+          ),
+        const SizedBox(height: 8),
+        if (_mode == 2)
+          WorksheetPreview(
+            text: _text.text,
+            grid: _grid,
+            traceAlpha: _trace,
+            fontFamily: _familyName,
+          )
+        else
+          TextPreview(
+            text: _text.text,
+            fontFamily: _familyName,
+            fontSize: _size,
+            vertical: _mode == 1,
+          ),
         const SizedBox(height: 24),
         FilledButton.icon(
           onPressed: _busy ? null : _generate,
@@ -199,6 +247,12 @@ class _WorksheetPageState extends State<WorksheetPage> {
       ],
     );
   }
+
+  String get _familyName => _font == 'user'
+      ? UserFont.family
+      : _font.contains('xingshu')
+          ? 'XingShu'
+          : 'WenKai';
 
   Widget _sectionTitle(BuildContext context, String s) => Padding(
         padding: const EdgeInsets.only(bottom: 8),
