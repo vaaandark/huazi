@@ -29,6 +29,13 @@ android {
         versionName = flutter.versionName
     }
 
+    lint {
+        // AGP 的 lint 在较新的 JDK 上会因 JavaDocParser 崩溃（工具链 bug），
+        // 与代码无关；CI 里也不跑 lint。
+        checkReleaseBuilds = false
+        abortOnError = false
+    }
+
     buildTypes {
         release {
             // TODO: Add your own signing config for the release build.
