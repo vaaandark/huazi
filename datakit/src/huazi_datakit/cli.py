@@ -193,7 +193,9 @@ def cmd_chars(args: argparse.Namespace) -> int:
 def cmd_fonts(args: argparse.Namespace) -> int:
     from . import config, glyphdata
 
-    chars = glyphdata.load_chars() + list("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789·—…、。，：；！？「」『』（）《》")
+    chars = glyphdata.load_chars() + list(
+        "".join(chr(c) for c in range(0x20, 0x7F))
+    ) + list("·—…、。，：；！？「」『』（）《》【】")
     src_dir = config.VENDOR / "fonts"
     out_dir = config.ROOT / "app" / "assets" / "fonts"
     jobs = {

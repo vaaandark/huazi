@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'char_search_page.dart';
+import 'worksheet_page.dart';
 import 'persons_page.dart';
 import 'works_page.dart';
 
@@ -18,6 +19,7 @@ class _AppShellState extends State<AppShell> {
     (icon: Icons.menu_book_outlined, selected: Icons.menu_book, label: '碑帖'),
     (icon: Icons.person_outline, selected: Icons.person, label: '书家'),
     (icon: Icons.brush_outlined, selected: Icons.brush, label: '字'),
+    (icon: Icons.picture_as_pdf_outlined, selected: Icons.picture_as_pdf, label: '字帖'),
     (icon: Icons.settings_outlined, selected: Icons.settings, label: '我的'),
   ];
 
@@ -25,6 +27,7 @@ class _AppShellState extends State<AppShell> {
         0 => const WorksPage(),
         1 => const PersonsPage(),
         2 => const CharSearchPage(),
+        3 => const WorksheetPage(),
         _ => const _MinePage(),
       };
 
@@ -33,7 +36,7 @@ class _AppShellState extends State<AppShell> {
     return LayoutBuilder(
       builder: (context, c) {
         final wide = c.maxWidth >= 720;
-        final titles = ['碑帖库', '书家', '查字', '我的'];
+        final titles = ['碑帖库', '书家', '查字', '字帖', '我的'];
 
         final body = _page(_index);
 
