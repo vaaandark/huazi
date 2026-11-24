@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../data/models.dart';
 import '../data/repository.dart';
@@ -22,11 +23,36 @@ class WorkDetailPage extends StatefulWidget {
 class _WorkDetailPageState extends State<WorkDetailPage> {
   late List<WorkImage> _images;
   int _page = 0;
+  final _pageController = PageController();
+  final _zoom = TransformationController();
+  bool _zoomed = false;
 
   @override
   void initState() {
     super.initState();
     _images = Repository.instance.images(widget.work.id);
+    _zoom.addListener(() {
+      final z = _zoom.value.getMaxScaleOnAxis();
+      final zoomed = z > 1.01;
+      if (zoomed != _zoomed && mounted) setState(() => _zoomed = zoomed);
+    });
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    _zoom.dispose();
+    super.dispose();
+  }
+
+  void _go(int delta) {
+    final next = _page + delta;
+    if (next < 0 || next >= _images.length) return;
+    _pageController.animateToPage(
+      next,
+      duration: const Duration(milliseconds: 220),
+      curve: Curves.easeOut,
+    );
   }
 
   @override
@@ -123,13 +149,45 @@ class _WorkDetailPageState extends State<WorkDetailPage> {
               final h = (c.maxWidth * 3 / 4).clamp(200.0, widget.embedded ? 380.0 : 460.0);
               return SizedBox(
                 height: h,
-                child: Stack(
+                child: CallbackShortcuts(
+                  bindings: {
+                    const SingleActivator(LogicalKeyboardKey.arrowLeft): () => _go(-1),
+                    const SingleActivator(LogicalKeyboardKey.arrowRight): () => _go(1),
+                  },
+                  child: Focus(
+                    autofocus: true,
+                    child: Stack(
                   children: [
                     PageView.builder(
+                      controller: _pageController,
                       itemCount: _images.length,
-                      onPageChanged: (i) => setState(() => _page = i),
+                      onPageChanged: (i) {
+                        _zoom.value = Matrix4.identity();
+                        setState(() {
+                          _page = i;
+                          _zoomed = false;
+                        });
+                      },
                       itemBuilder: (context, i) => _pageImage(context, _images[i]),
                     ),
+                    if (_page > 0)
+                      Positioned(
+                        left: 8,
+                        top: 0,
+                        bottom: 0,
+                        child: Center(
+                          child: _navButton(Icons.chevron_left, () => _go(-1)),
+                        ),
+                      ),
+                    if (_page < _images.length - 1)
+                      Positioned(
+                        right: 8,
+                        top: 0,
+                        bottom: 0,
+                        child: Center(
+                          child: _navButton(Icons.chevron_right, () => _go(1)),
+                        ),
+                      ),
                     Positioned(
                       right: 12,
                       bottom: 12,
@@ -146,6 +204,8 @@ class _WorkDetailPageState extends State<WorkDetailPage> {
                       ),
                     ),
                   ],
+                    ),
+                  ),
                 ),
               );
             },
@@ -153,7 +213,7 @@ class _WorkDetailPageState extends State<WorkDetailPage> {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8),
             child: Text(
-              '轻点图片查看高清原图（需联网）· 左右滑动翻页',
+              '左右拖动 / ← → 键翻页 · 轻点看高清原图（需联网）',
               style: Theme.of(context).textTheme.labelSmall?.copyWith(
                     color: scheme.onSurfaceVariant,
                   ),
@@ -172,9 +232,27 @@ class _WorkDetailPageState extends State<WorkDetailPage> {
     return GestureDetector(
       onTap: img.remote == null ? null : () => _openFull(context, img),
       child: InteractiveViewer(
+        transformationController: _zoom,
         minScale: 1,
         maxScale: 3,
+        // 未放大时把横向拖动让给 PageView，放大后才用于平移
+        panEnabled: _zoomed,
         child: child,
+      ),
+    );
+  }
+
+  Widget _navButton(IconData icon, VoidCallback onTap) {
+    return Material(
+      color: Colors.black.withValues(alpha: 0.42),
+      shape: const CircleBorder(),
+      child: InkWell(
+        customBorder: const CircleBorder(),
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.all(6),
+          child: Icon(icon, color: Colors.white, size: 26),
+        ),
       ),
     );
   }
