@@ -1,0 +1,79 @@
+id: li-bai-xian-shi-juan
+title: 李白仙诗卷
+aliases: []
+author: 苏轼
+dynasty: 宋
+script: xing
+carrier: moji
+holder: 日本大阪市立美术馆
+summary: 此《李白仙诗卷》传为北宋苏轼的行草书作品（时年五十八岁）。卷中所书相传由姚安世（号 “丹元子”）口述的两首李白五言古诗（逸诗，开篇分别为 “朝披梦泽云” 和 “人生烛上花”，未收录于《李太白文集》）。卷后有蔡松年等人题跋，钤有赵孟頫等人收藏印。此卷现藏于日本大阪市立美术馆。
+description: "此《李白仙诗卷》传为北宋苏轼的行草书作品（时年五十八岁）。卷中所书相传由姚安世（号 “丹元子”）口述的两首李白五言古诗（逸诗，开篇分别为 “朝披梦泽云” 和 “人生烛上花”，未收录于《李太白文集》）。卷后有蔡松年等人题跋，钤有赵孟頫等人收藏印。此卷现藏于日本大阪市立美术馆。\
+  \ \n 此作展现了苏轼晚年成熟的 “苏体” 风貌。全卷用墨丰厚饱满，线条 “绵里裹铁、丰腴跌宕”，字形错落有致，看似漫不经心，实则法度严谨，生动诠释了其 “我书意造本无法” 的艺术主张。更为难得的是，苏轼将其写在精美\
+  \ “砑花笺” 上。 这种特制的加工纸不仅名贵，更衬托出作品雅致脱俗的书卷气。 \n 前隔水题签（清代王鸿绪） \n 蘇文忠書太白仙詩真跡，神品上上，儼齋秘藏"
+transcription: "李白诗一 \n 朝披夢澤雲，笠釣清茫茫。尋絲得雙鯉，内 [ 1 ] “中” 字为笔误，标记有三个小点 \n （“中” 字为笔误，标记有三个小点） 有三元章。篆字若丹蛇，逸勢如飛翔。還家問天老，奧義不可量。金刀割青素，靈文爛煌煌。嚥服十二環，奄見仙人房。莫跨紫鱗去，海氣侵肌涼。龍子善變化，化作梅花粧。贈我纍纍珠，靡靡明月光。勸我穿絳縷，繫作裠間璫。挹子以攜去，談笑聞遺香。\
+  \ \n 李白诗二 \n 人生燭上華，光滅巧妍盡。春風繞樹頭，日與化工進。只知雨露貪，不聞零落近。我昔飛骨時，慘見當塗墳。青松靄朝霞，縹緲山下村。既死明月魄，無復玻瓈魂。念此一脫灑，長嘯登崑崙。醉着鸞皇衣，星斗俯可捫。\
+  \ \n 因为这两首诗在李白现存的所有文集中均未见记载，历代学者对其真伪一直存在争议。有学者认为这确实是李白留下的修道游仙之作，但也有不少后人怀疑这其实是苏轼本人的自作（或是道士伪作）。 \n 题跋印鉴\
+  \ \n 金代： 蔡松年、施宜生、刘沂、高衎、蔡珪 跋； 明代 ：张弼 跋； 清代 ：高士奇、沈德潜 跋；卷上还钤有元代赵孟頫、俞和的收藏印；明代藏书家毛晋的鉴藏印；以及清代王鸿绪、刘恕、程桢义、苏元瑞等人的收藏印。后来此卷流落日本后，几经辗转，由近代著名收藏家阿部房次郎购得。阿部去世后，其子遵照遗嘱将此国宝捐赠给了大阪市立美术馆。\
+  \ \n 作者款识： 元祐八年七月十日，丹元復傳此二詩 \n苏轼，字子瞻，一字和仲，号东坡居士、铁冠道人，眉州眉山人，北宋文学家、政治家、艺术家。嘉佑二年进士，累官至端明殿学士兼翰林学士、礼部郎中、户部侍郎、兵部尚书。南宋理学方炽时，加赐谥号文忠，复追赠太师。"
+rights: 未知。商业出版或需馆藏机构授权
+layout: 纸本（砑花笺）行草书，主体 34×111.1 厘米
+images:
+- seq: 1
+  remote: https://www.shuge.org/wp-content/uploads/2026/08/li_bai_xian_shi_juan01.jpg
+  thumb: cache/img/li-bai-xian-shi-juan-001.webp
+  width: 640
+  height: 359
+  license: 公有领域（原作），扫描件来自书格
+- seq: 2
+  remote: https://www.shuge.org/wp-content/uploads/2026/08/li_bai_xian_shi_juan02.jpg
+  thumb: cache/img/li-bai-xian-shi-juan-002.webp
+  width: 640
+  height: 359
+  license: 公有领域（原作），扫描件来自书格
+- seq: 3
+  remote: https://www.shuge.org/wp-content/uploads/2026/08/li_bai_xian_shi_juan03.jpg
+  thumb: cache/img/li-bai-xian-shi-juan-003.webp
+  width: 640
+  height: 359
+  license: 公有领域（原作），扫描件来自书格
+- seq: 4
+  remote: https://www.shuge.org/wp-content/uploads/2026/08/li_bai_xian_shi_juan04.jpg
+  thumb: cache/img/li-bai-xian-shi-juan-004.webp
+  width: 640
+  height: 359
+  license: 公有领域（原作），扫描件来自书格
+- seq: 5
+  remote: https://www.shuge.org/wp-content/uploads/2026/08/li_bai_xian_shi_juan05.jpg
+  thumb: cache/img/li-bai-xian-shi-juan-005.webp
+  width: 640
+  height: 359
+  license: 公有领域（原作），扫描件来自书格
+- seq: 6
+  remote: https://www.shuge.org/wp-content/uploads/2026/08/li_bai_xian_shi_juan06.jpg
+  thumb: cache/img/li-bai-xian-shi-juan-006.webp
+  width: 640
+  height: 359
+  license: 公有领域（原作），扫描件来自书格
+- seq: 7
+  remote: https://www.shuge.org/wp-content/uploads/2026/08/li_bai_xian_shi_juan07.jpg
+- seq: 8
+  remote: https://www.shuge.org/wp-content/uploads/2026/08/li_bai_xian_shi_juan08.jpg
+- seq: 9
+  remote: https://www.shuge.org/wp-content/uploads/2026/08/li_bai_xian_shi_juan09.jpg
+- seq: 10
+  remote: https://www.shuge.org/wp-content/uploads/2026/08/li_bai_xian_shi_juan10.jpg
+- seq: 11
+  remote: https://www.shuge.org/wp-content/uploads/2026/08/li_bai_xian_shi_juan11.jpg
+- seq: 12
+  remote: https://www.shuge.org/wp-content/uploads/2026/08/li_bai_xian_shi_juan12.jpg
+- seq: 13
+  remote: https://www.shuge.org/wp-content/uploads/2026/08/li_bai_xian_shi_juan13.jpg
+- seq: 14
+  remote: https://www.shuge.org/wp-content/uploads/2026/08/li_bai_xian_shi_juan14.jpg
+sources:
+- name: 书格
+  url: https://www.shuge.org/view/li_bai_xian_shi_juan/
+  license: 未知。商业出版或需馆藏机构授权
+  retrieved: '2026-11-25'
+status: draft
+notes: shuge_id=217698

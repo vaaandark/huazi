@@ -1,0 +1,25 @@
+id: cheng-qiu-guan-cang-qi-ta
+title: 澄秋馆藏器拓
+aliases: []
+dynasty: 民国
+carrier: beike
+holder: 此为 京都大学人文科学研究所
+summary: 此《澄秋馆藏器拓》收录清末民初陈宝琛（澄秋馆）藏青铜器拓片。全套共两册，上册：钟鼎鬲卣敦匜簋簠盉尊觚等（全形拓为主）三十九幅。下册：泉范、兵器、刀布、造像、镜鉴等四十余幅。此为民国十五年序拓本，应为名工周希丁精拓。
+description: "此《澄秋馆藏器拓》收录清末民初陈宝琛（澄秋馆）藏青铜器拓片。全套共两册，上册：钟鼎鬲卣敦匜簋簠盉尊觚等（全形拓为主）三十九幅。下册：泉范、兵器、刀布、造像、镜鉴等四十余幅。此为民国十五年序拓本，应为名工周希丁精拓。\
+  \ \n 全形拓 ，又称立体拓、器物拓、图形拓。是一种以墨拓技法完成，要求拓技者具备熟悉素描、绘画、裱拓、剪纸等技法，把器物原貌转移到平面拓纸上的一种特殊技艺。 \n 全套共三册： \n 手抄目录一册\
+  \ \n上册：钟鼎鬲卣敦匜簋簠盉尊觚等等（全形拓为主） \n下册：泉范、兵器、刀布、造像、镜鉴等等 \n 题签： 澄秋館藏器搨本 \n 陈宝琛 （1848—1935 年），字伯潜，号弢庵、陶庵、听水老人，福州闽县螺洲（今福建省福州市仓山区螺洲镇）人。晚清大臣、学者，刑部尚书陈若霖曾孙。"
+layout: 三册。开本尺寸：39.8 x 27.5 厘米（目录开本：26.6x23 厘米）
+images:
+- seq: 1
+  remote: https://www.shuge.org/wp-content/uploads/2021/09/cheng_qiu_guan_cang_qi_ta001.jpg
+  thumb: cache/img/cheng-qiu-guan-cang-qi-ta-001.webp
+  width: 640
+  height: 924
+  license: 公有领域（原作），扫描件来自书格
+sources:
+- name: 书格
+  url: https://www.shuge.org/view/cheng_qiu_guan_cang_qi_ta/
+  retrieved: '2026-11-25'
+status: draft
+notes: shuge_id=29907
+rights: 未标注（来源页未声明，商业使用需自行确认）

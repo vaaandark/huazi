@@ -1,0 +1,36 @@
+# Flutter
+app/build/
+app/.dart_tool/
+app/.flutter-plugins
+app/.flutter-plugins-dependencies
+app/linux/flutter/ephemeral/
+app/windows/flutter/ephemeral/
+app/android/.gradle/
+app/android/local.properties
+
+# 构建产物（可由 datakit 重建）
+build/
+app/assets/glyphs/*
+app/assets/fonts/*
+
+# app 内置数据是产品本身，随仓库提交：
+#   app/assets/db/huazi.sqlite
+#   app/assets/thumbs/*.webp
+
+# 抓取缓存与第三方大文件
+data/cache/
+data/glyphs/
+data/fonts/
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+datakit/.venv/
+
+# 杂项
+.DS_Store
+*.log
+
+# 本地发布物
+dist/
