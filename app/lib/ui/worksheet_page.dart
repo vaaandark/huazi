@@ -147,21 +147,24 @@ class _WorksheetPageState extends State<WorksheetPage> {
         ),
         const SizedBox(height: 16),
         _sectionTitle(context, '字体'),
-        Wrap(
-          spacing: 8,
-          children: [
-            for (final (label, v) in [
-              ('硬笔楷 · 文楷', 'assets/fonts/wenkai.ttf'),
-              ('毛笔行书 · 志莽', 'assets/fonts/xingshu.ttf'),
-              if (UserFont.available)
-                ('我的字体 · ${UserFont.displayName ?? ""}', 'user'),
-            ])
-              ChoiceChip(
-                label: Text(label),
-                selected: _font == v,
-                onSelected: (_) => setState(() => _font = v),
-              ),
-          ],
+        ListenableBuilder(
+          listenable: UserFont.revision,
+          builder: (context, _) => Wrap(
+            spacing: 8,
+            children: [
+              for (final (label, v) in [
+                ('硬笔楷 · 文楷', 'assets/fonts/wenkai.ttf'),
+                ('毛笔行书 · 志莽', 'assets/fonts/xingshu.ttf'),
+                if (UserFont.available)
+                  ('我的字体 · ${UserFont.displayName ?? ""}', 'user'),
+              ])
+                ChoiceChip(
+                  label: Text(label),
+                  selected: _font == v,
+                  onSelected: (_) => setState(() => _font = v),
+                ),
+            ],
+          ),
         ),
         const SizedBox(height: 24),
         WorksheetPreview(

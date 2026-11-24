@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:file_selector/file_selector.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 /// 网页版：不走网络下载（GitHub Release 没有 CORS 头），
@@ -12,10 +13,25 @@ class UserFont {
   static String? displayName;
   static ByteData? bytes;
 
+  static final ValueNotifier<int> revision = ValueNotifier(0);
+
   static bool get available => bytes != null;
 
-  /// 浏览器不做持久化，刷新后需要重新选择（浏览器自身会缓存文件句柄/内容）。
+  static void _bump() => revision.value++;
+
+  /// 浏览器不做持久化，刷新后需要重新选择。
   static Future<void> restore() async {}
+
+  static Future<String?> downloadUrl() async => null;
+
+  static Future<void> setDownloadUrl(String? url) async {}
+
+  static Future<void> rename(String name) async {
+    final trimmed = name.trim();
+    if (trimmed.isEmpty) return;
+    displayName = trimmed;
+    _bump();
+  }
 
   static Future<String> downloadRecommended(
     void Function(double progress) onProgress,
@@ -37,12 +53,15 @@ class UserFont {
       ..addFont(Future.value(ByteData.view(data.buffer)));
     await loader.load();
     bytes = ByteData.view(data.buffer);
-    displayName = picked.name.replaceAll(RegExp(r'\.(ttf|otf)$', caseSensitive: false), '');
+    displayName = picked.name
+        .replaceAll(RegExp(r'\.(ttf|otf)$', caseSensitive: false), '');
+    _bump();
     return displayName;
   }
 
   static Future<void> clear() async {
     displayName = null;
     bytes = null;
+    _bump();
   }
 }

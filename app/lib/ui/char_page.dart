@@ -386,16 +386,19 @@ class _CharPageState extends State<CharPage> {
       children: [
         Text('写法对比', style: Theme.of(context).textTheme.titleSmall),
         const SizedBox(height: 10),
-        Row(
-          children: [
-            _fontTile(context, 'wenkai', '硬笔楷 · 文楷'),
-            const SizedBox(width: 10),
-            _fontTile(context, 'xingshu', '毛笔行书 · 志莽'),
-            if (UserFont.available) ...[
+        ListenableBuilder(
+          listenable: UserFont.revision,
+          builder: (context, _) => Row(
+            children: [
+              _fontTile(context, 'wenkai', '硬笔楷 · 文楷'),
               const SizedBox(width: 10),
-              _fontTile(context, 'user', UserFont.displayName ?? '我的字体'),
+              _fontTile(context, 'xingshu', '毛笔行书 · 志莽'),
+              if (UserFont.available) ...[
+                const SizedBox(width: 10),
+                _fontTile(context, 'user', UserFont.displayName ?? '我的字体'),
+              ],
             ],
-          ],
+          ),
         ),
         const SizedBox(height: 20),
         _ancientSection(context),

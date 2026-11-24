@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:flutter/foundation.dart';
+
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/services.dart';
 import 'package:path/path.dart' as p;
@@ -18,7 +20,42 @@ class UserFont {
   static String? displayName;
   static ByteData? bytes;
 
+  /// 字体变化时自增，界面用 ListenableBuilder 监听即可立即刷新
+  static final ValueNotifier<int> revision = ValueNotifier(0);
+
+  static const defaultDownloadUrl =
+      'https://github.com/vaaandark/huazi/releases/download/fonts-v1/RamegaZhangQingpingYingbiXingshu.ttf';
+
   static bool get available => bytes != null;
+
+  static void _bump() => revision.value++;
+
+  /// 自定义下载地址（网络受限时填镜像）
+  static Future<String?> downloadUrl() async {
+    final prefs = await SharedPreferences.getInstance();
+    final v = prefs.getString('font_download_url');
+    return (v == null || v.trim().isEmpty) ? null : v.trim();
+  }
+
+  static Future<void> setDownloadUrl(String? url) async {
+    final prefs = await SharedPreferences.getInstance();
+    if (url == null || url.trim().isEmpty) {
+      await prefs.remove('font_download_url');
+    } else {
+      await prefs.setString('font_download_url', url.trim());
+    }
+    _bump();
+  }
+
+  /// 给导入的字体改一个好记的名字
+  static Future<void> rename(String name) async {
+    final trimmed = name.trim();
+    if (trimmed.isEmpty) return;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('user_font_name', trimmed);
+    displayName = trimmed;
+    _bump();
+  }
 
   static Future<Directory> _dir() async {
     final base = await getApplicationSupportDirectory();
@@ -37,14 +74,15 @@ class UserFont {
     final data = await f.readAsBytes();
     displayName = prefs.getString('user_font_name') ?? '我的字体';
     await _register(data);
+    _bump();
   }
 
   /// 从发布页下载可选字体包（不做任何修改，原样保存）
   static Future<String> downloadRecommended(
     void Function(double progress) onProgress,
   ) async {
-    const url =
-        'https://github.com/vaaandark/huazi/releases/download/fonts-v1/RamegaZhangQingpingYingbiXingshu.ttf';
+    final custom = await downloadUrl();
+    final url = custom ?? defaultDownloadUrl;
     const name = '硬笔行书 · 张清平';
 
     final dir = await _dir();
@@ -53,7 +91,11 @@ class UserFont {
 
     final client = HttpClient();
     try {
-      final req = await client.getUrl(Uri.parse(url));
+      final uri = Uri.parse(url);
+      if (!uri.hasScheme || uri.host.isEmpty) {
+        throw HttpException('地址无效');
+      }
+      final req = await client.getUrl(uri);
       final res = await req.close();
       if (res.statusCode != HttpStatus.ok) {
         throw HttpException('HTTP ${res.statusCode}');
@@ -70,6 +112,11 @@ class UserFont {
       await sink.close();
       if (target.existsSync()) target.deleteSync();
       tmp.renameSync(target.path);
+    } on SocketException catch (e) {
+      throw SocketException(
+        '连不上 ${Uri.parse(url).host}。可能是网络限制，'
+        '可以在「下载地址」里换一个镜像，或改成手动导入字体文件。(${e.osError?.message ?? e.message})',
+      );
     } finally {
       client.close();
     }
@@ -80,6 +127,7 @@ class UserFont {
     await prefs.setString('user_font_name', name);
     displayName = name;
     await _register(data);
+    _bump();
     return name;
   }
 
@@ -105,6 +153,7 @@ class UserFont {
 
     displayName = name;
     await _register(data);
+    _bump();
     return name;
   }
 
@@ -126,5 +175,6 @@ class UserFont {
     await prefs.remove('user_font_name');
     displayName = null;
     bytes = null;
+    _bump();
   }
 }
