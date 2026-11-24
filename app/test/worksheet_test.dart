@@ -15,6 +15,8 @@ void main() {
       ),
     );
     expect(bytes.length, greaterThan(1000));
-    File('/tmp/huazi_worksheet.pdf').writeAsBytesSync(bytes);
+    final out = File('${Directory.systemTemp.path}/huazi_worksheet.pdf');
+    out.writeAsBytesSync(bytes);
+    expect(out.lengthSync(), greaterThan(1000));
   });
 }

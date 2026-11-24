@@ -149,9 +149,8 @@ class _WorksheetPageState extends State<WorksheetPage> {
           spacing: 8,
           children: [
             for (final (label, v) in [
-              ('文楷 · 标准楷', 'assets/fonts/wenkai.ttf'),
-              ('小赖 · 手写楷', 'assets/fonts/xiaolai.ttf'),
-              ('志莽 · 行书', 'assets/fonts/xingshu.ttf'),
+              ('硬笔楷 · 文楷', 'assets/fonts/wenkai.ttf'),
+              ('硬笔行书 · 志莽', 'assets/fonts/xingshu.ttf'),
             ])
               ChoiceChip(
                 label: Text(label),
@@ -167,9 +166,7 @@ class _WorksheetPageState extends State<WorksheetPage> {
           traceAlpha: _trace,
           fontFamily: _font.contains('xingshu')
               ? 'XingShu'
-              : _font.contains('xiaolai')
-                  ? 'Xiaolai'
-                  : 'WenKai',
+              : 'WenKai',
         ),
         const SizedBox(height: 24),
         FilledButton.icon(

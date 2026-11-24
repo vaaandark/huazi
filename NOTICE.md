@@ -70,5 +70,5 @@
   高清原图保留原始链接，不镜像、不再分发。
 - 标注 **CC BY-NC 4.0** 的条目仅限非商业使用；若需商用请向原机构申请。
 - 书格 (shuge.org) 的抓取遵守其 robots.txt（不访问 `/dl/`），并保持请求间隔。
-- 字体：LXGW 文楷 GB、小赖字体（Xiaolai）、志莽行书，均为 SIL OFL 1.1。
+- 字体：LXGW 文楷 GB、志莽行书，均为 SIL OFL 1.1。
 - 字形（M2 起）：`zhouyongh/hanzi-glyphs-svg`，古文字 CC0、字体层 OFL 1.1、甲骨 JGW 层 CC BY 4.0。

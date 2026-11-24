@@ -43,7 +43,5 @@ get "https://github.com/lxgw/LxgwWenkaiGB/releases/download/v1.530/LXGWWenKaiGB-
     "$VENDOR/fonts/LXGWWenKaiGB-Regular.ttf"
 get "https://github.com/google/fonts/raw/main/ofl/zhimangxing/ZhiMangXing-Regular.ttf" \
     "$VENDOR/fonts/ZhiMangXing-Regular.ttf"
-get "https://github.com/ChewKeanHo/visuals-fonts-xiaolai/releases/download/v1.0.0/Xiaolai-Regular.ttf" \
-    "$VENDOR/fonts/Xiaolai-Regular.ttf"
 
 log "完成，下一步：cd datakit && uv run huazi-data build && uv run huazi-data fonts && uv run huazi-data ancient"
