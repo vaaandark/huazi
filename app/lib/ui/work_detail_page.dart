@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import '../data/models.dart';
 import '../data/repository.dart';
 import 'char_page.dart';
+import 'worksheet_page.dart';
 import 'widgets/work_card.dart';
 
 class WorkDetailPage extends StatefulWidget {
@@ -317,7 +318,26 @@ class _WorkDetailPageState extends State<WorkDetailPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('释文', style: Theme.of(context).textTheme.titleSmall),
+          Row(
+            children: [
+              Text('释文', style: Theme.of(context).textTheme.titleSmall),
+              const Spacer(),
+              TextButton.icon(
+                onPressed: () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => Scaffold(
+                      appBar: AppBar(title: Text(widget.work.title)),
+                      body: WorksheetPage(
+                        initialText: text.replaceAll(RegExp(r'^[\s\S]*?释文\s*'), ''),
+                      ),
+                    ),
+                  ),
+                ),
+                icon: const Icon(Icons.picture_as_pdf_outlined, size: 18),
+                label: const Text('练这一段'),
+              ),
+            ],
+          ),
           const SizedBox(height: 8),
           Container(
             padding: const EdgeInsets.all(14),

@@ -5,14 +5,24 @@ import '../util/save_pdf.dart';
 import 'widgets/worksheet_preview.dart';
 
 class WorksheetPage extends StatefulWidget {
-  const WorksheetPage({super.key});
+  const WorksheetPage({super.key, this.initialText});
+
+  final String? initialText;
 
   @override
   State<WorksheetPage> createState() => _WorksheetPageState();
 }
 
 class _WorksheetPageState extends State<WorksheetPage> {
-  final _text = TextEditingController(text: '永和九年岁在癸丑');
+  late final TextEditingController _text;
+
+  @override
+  void initState() {
+    super.initState();
+    _text = TextEditingController(
+      text: widget.initialText ?? '永和九年岁在癸丑',
+    );
+  }
   GridStyle _grid = GridStyle.tian;
   double _trace = 0.28;
   String _font = 'assets/fonts/wenkai.ttf';
