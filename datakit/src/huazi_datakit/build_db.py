@@ -66,6 +66,23 @@ CREATE TABLE person (
   work_count INTEGER DEFAULT 0
 );
 
+CREATE TABLE char (
+  cp             INTEGER PRIMARY KEY,
+  ch             TEXT NOT NULL,
+  pinyin         TEXT,
+  radical        TEXT,
+  decomposition  TEXT,
+  etymology_type TEXT,
+  etymology_hint TEXT,
+  strokes        INTEGER
+);
+
+CREATE TABLE stroke (
+  cp   INTEGER PRIMARY KEY,
+  data BLOB NOT NULL,
+  n    INTEGER
+);
+
 CREATE VIRTUAL TABLE work_fts USING fts5(
   id UNINDEXED, title, author, summary, transcription, tokenize='unicode61'
 );
@@ -153,6 +170,32 @@ def build(out: Path) -> None:
 
     conn.commit()
 
+    # ---- 字元数据：笔顺 + 结构
+    from . import glyphdata
+
+    chars = glyphdata.load_chars()
+    strokes_dir = config.VENDOR / "strokes" / "package"
+    stroke_rows = []
+    if strokes_dir.exists():
+        stroke_rows = glyphdata.build_strokes(strokes_dir, chars)
+        smap = glyphdata.stroke_count_map(stroke_rows)
+        conn.executemany(
+            "INSERT INTO stroke (cp,data,n) VALUES (?,?,?)", stroke_rows
+        )
+    else:
+        smap = {}
+
+    dict_path = config.VENDOR / "dictionary.txt"
+    if dict_path.exists():
+        rows = glyphdata.build_chars(dict_path, chars)
+        conn.executemany(
+            """INSERT INTO char (cp,ch,pinyin,radical,decomposition,etymology_type,
+                etymology_hint,strokes) VALUES (?,?,?,?,?,?,?,?)""",
+            [(cp, ch, py, rad, dec, et, hint, smap.get(cp)) for
+             cp, ch, py, rad, dec, et, hint in rows],
+        )
+    conn.commit()
+
     # 缩略图
     dst = out.parent / "thumbs"
     if dst.exists():
@@ -164,6 +207,19 @@ def build(out: Path) -> None:
         copied += 1
 
     size = out.stat().st_size
+    # 数据版本清单，app 据此判断是否需要重新拷贝内置库
+    import json as _json
+    from datetime import datetime, timezone
+
+    manifest = {
+        "version": datetime.now(timezone.utc).strftime("%Y%m%d%H%M%S"),
+        "works": len(works),
+        "size": size,
+    }
+    (out.parent / "manifest.json").write_text(
+        _json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8"
+    )
+
     print(f"✓ {out}  {size/1024/1024:.1f} MB")
     print(f"  作品 {len(works)} 条，其中排除 {sum(1 for _, w in works if 'excluded:' in (w.notes or ''))} 条")
     print(f"  书家 {len(by_author)} 位，缩略图 {copied} 张")

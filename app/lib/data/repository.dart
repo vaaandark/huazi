@@ -1,3 +1,5 @@
+import 'package:sqlite3/sqlite3.dart' show ResultSet;
+
 import 'database.dart';
 import 'models.dart';
 
@@ -80,4 +82,8 @@ class Repository {
     final r = _db.raw.select('SELECT COUNT(*) AS n FROM work WHERE excluded = 0');
     return r.first['n'] as int;
   }
+
+  /// 通用查询，供字元/笔顺等模块使用。
+  ResultSet select(String sql, [List<Object?> args = const []]) =>
+      _db.raw.select(sql, args);
 }

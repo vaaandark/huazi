@@ -1,0 +1,70 @@
+name: build
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  desktop:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            target: windows
+            artifact: huazi-windows
+          - os: macos-latest
+            target: macos
+            artifact: huazi-macos
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Build
+        run: |
+          cd app
+          flutter pub get
+          flutter build ${{ matrix.target }} --release
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact }}
+          path: |
+            app/build/${{ matrix.target }}/**/*.exe
+            app/build/${{ matrix.target }}/**/*.app
+            app/build/${{ matrix.target }}/**/*.dll
+            app/build/${{ matrix.target }}/**/*.dylib
+            app/build/${{ matrix.target }}/**/data/**
+          if-no-files-found: warn
+
+  android:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Build APK
+        run: |
+          cd app
+          flutter pub get
+          flutter build apk --release --split-per-abi
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: huazi-android
+          path: app/build/app/outputs/flutter-apk/*.apk

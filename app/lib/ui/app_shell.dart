@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'char_page.dart';
+import 'char_search_page.dart';
 import 'persons_page.dart';
 import 'works_page.dart';
 
@@ -24,7 +24,7 @@ class _AppShellState extends State<AppShell> {
   Widget _page(int i) => switch (i) {
         0 => const WorksPage(),
         1 => const PersonsPage(),
-        2 => const _CharEntryPage(),
+        2 => const CharSearchPage(),
         _ => const _MinePage(),
       };
 
@@ -111,48 +111,6 @@ class _Logo extends StatelessWidget {
           fontSize: 22,
           fontWeight: FontWeight.w600,
         ),
-      ),
-    );
-  }
-}
-
-class _CharEntryPage extends StatelessWidget {
-  const _CharEntryPage();
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Text(
-            '查一个字',
-            style: Theme.of(context).textTheme.titleLarge,
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'M2 会把碑帖里切出的真迹单字、篆隶字形和笔顺接到这里。',
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  height: 1.6,
-                ),
-          ),
-          const SizedBox(height: 20),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: [
-              for (final ch in ['永', '和', '九', '年', '之', '法', '书', '道'])
-                FilledButton.tonal(
-                  onPressed: () => Navigator.of(context).push(
-                    MaterialPageRoute(builder: (_) => CharPage(char: ch)),
-                  ),
-                  child: Text(ch, style: const TextStyle(fontSize: 20)),
-                ),
-            ],
-          ),
-        ],
       ),
     );
   }

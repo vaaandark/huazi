@@ -10,6 +10,7 @@ TEXT_DIR = DATA / "texts"
 CHARLIST_DIR = DATA / "charlists"
 CACHE = DATA / "cache"
 THUMB_DIR = CACHE / "img"
+VENDOR = DATA / "vendor"
 BUILD = ROOT / "build"
 
 SHUGE_API = "https://www.shuge.org/wp-json/wp/v2"

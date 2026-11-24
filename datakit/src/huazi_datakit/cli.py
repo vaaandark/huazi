@@ -190,6 +190,33 @@ def cmd_chars(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_fonts(args: argparse.Namespace) -> int:
+    from . import config, glyphdata
+
+    chars = glyphdata.load_chars() + list("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789·—…、。，：；！？「」『』（）《》")
+    src_dir = config.VENDOR / "fonts"
+    out_dir = config.ROOT / "app" / "assets" / "fonts"
+    jobs = {
+        "LXGWWenKaiGB-Regular.ttf": "wenkai.ttf",
+        "ZhiMangXing-Regular.ttf": "xingkai.ttf",
+    }
+    for src_name, dst_name in jobs.items():
+        src = src_dir / src_name
+        if not src.exists():
+            print(f"  ⚠ 缺少 {src_name}，跳过")
+            continue
+        dst = glyphdata.subset_font(src, out_dir / dst_name, chars)
+        print(f"  {src_name} → {dst.name}  {dst.stat().st_size/1024/1024:.1f} MB")
+    return 0
+
+
+def cmd_ancient(args: argparse.Namespace) -> int:
+    from . import ancient_pack
+
+    ancient_pack.build(config.BUILD / "glyphs-pack.sqlite")
+    return 0
+
+
 # ---------------------------------------------------------------- CLI
 
 def main(argv: list[str] | None = None) -> int:
@@ -216,6 +243,12 @@ def main(argv: list[str] | None = None) -> int:
 
     sp = sub.add_parser("chars", help="生成 6763 字表")
     sp.set_defaults(func=cmd_chars)
+
+    sp = sub.add_parser("fonts", help="子集化字体")
+    sp.set_defaults(func=cmd_fonts)
+
+    sp = sub.add_parser("ancient", help="构建篆隶字形可选包")
+    sp.set_defaults(func=cmd_ancient)
 
     sp = sub.add_parser("build", help="编译 SQLite")
     sp.set_defaults(func=cmd_build)
