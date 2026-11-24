@@ -65,7 +65,8 @@ class AncientPack {
     final db = _db;
     if (db == null) return const [];
     final rows = db.select(
-      'SELECT script, seq, svg FROM glyph WHERE cp = ? ORDER BY script, seq',
+      'SELECT script, seq, svg FROM glyph WHERE cp = ? '
+      "ORDER BY CASE script WHEN 'zhuan' THEN 0 ELSE 1 END, seq",
       [cp],
     );
     return rows.map((r) {

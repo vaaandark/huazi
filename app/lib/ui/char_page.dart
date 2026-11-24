@@ -379,7 +379,7 @@ class _CharPageState extends State<CharPage> {
         onTap: () => setState(() => _font = f ?? 'WenKai'),
         borderRadius: BorderRadius.circular(12),
         child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 14),
+          padding: const EdgeInsets.symmetric(vertical: 18),
           decoration: BoxDecoration(
             color: selected ? scheme.secondaryContainer : scheme.surfaceContainerLow,
             borderRadius: BorderRadius.circular(12),
@@ -391,7 +391,7 @@ class _CharPageState extends State<CharPage> {
             children: [
               Text(
                 widget.char,
-                style: TextStyle(fontFamily: f, fontSize: 44, height: 1.2),
+                style: TextStyle(fontFamily: f, fontSize: 64, height: 1.25),
               ),
               const SizedBox(height: 6),
               Text(label, style: Theme.of(context).textTheme.labelSmall),
