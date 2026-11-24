@@ -39,6 +39,50 @@ class UserFont {
     await _register(data);
   }
 
+  /// 从发布页下载可选字体包（不做任何修改，原样保存）
+  static Future<String> downloadRecommended(
+    void Function(double progress) onProgress,
+  ) async {
+    const url =
+        'https://github.com/vaaandark/huazi/releases/download/fonts-v1/RamegaZhangQingpingYingbiXingshu.ttf';
+    const name = '硬笔行书 · 张清平';
+
+    final dir = await _dir();
+    final target = File(p.join(dir.path, 'ramega-xingshu.ttf'));
+    final tmp = File('${target.path}.part');
+
+    final client = HttpClient();
+    try {
+      final req = await client.getUrl(Uri.parse(url));
+      final res = await req.close();
+      if (res.statusCode != HttpStatus.ok) {
+        throw HttpException('HTTP ${res.statusCode}');
+      }
+      final total = res.contentLength;
+      final sink = tmp.openWrite();
+      var received = 0;
+      await for (final chunk in res) {
+        sink.add(chunk);
+        received += chunk.length;
+        if (total > 0) onProgress(received / total);
+      }
+      await sink.flush();
+      await sink.close();
+      if (target.existsSync()) target.deleteSync();
+      tmp.renameSync(target.path);
+    } finally {
+      client.close();
+    }
+
+    final data = await target.readAsBytes();
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('user_font_path', target.path);
+    await prefs.setString('user_font_name', name);
+    displayName = name;
+    await _register(data);
+    return name;
+  }
+
   static Future<String?> import() async {
     const typeGroup = XTypeGroup(
       label: '字体',

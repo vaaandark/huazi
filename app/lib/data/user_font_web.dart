@@ -1,6 +1,10 @@
 import 'dart:typed_data';
 
-/// 网页版没有本地文件系统，导入字体暂不支持（可用于桌面/手机版）。
+import 'package:file_selector/file_selector.dart';
+import 'package:flutter/services.dart';
+
+/// 网页版：不走网络下载（GitHub Release 没有 CORS 头），
+/// 改为让用户从本地选择字体文件，读字节后注册到 CanvasKit。
 class UserFont {
   UserFont._();
 
@@ -8,13 +12,37 @@ class UserFont {
   static String? displayName;
   static ByteData? bytes;
 
-  static bool get available => false;
+  static bool get available => bytes != null;
 
+  /// 浏览器不做持久化，刷新后需要重新选择（浏览器自身会缓存文件句柄/内容）。
   static Future<void> restore() async {}
 
-  static Future<String?> import() async {
-    throw UnsupportedError('网页版暂不支持导入本地字体，请使用桌面版或手机版');
+  static Future<String> downloadRecommended(
+    void Function(double progress) onProgress,
+  ) async {
+    throw UnsupportedError('网页版请用「选择字体文件」导入本地字体');
   }
 
-  static Future<void> clear() async {}
+  static Future<String?> import() async {
+    const typeGroup = XTypeGroup(
+      label: '字体',
+      extensions: ['ttf', 'otf', 'TTF', 'OTF'],
+    );
+    final picked = await openFile(acceptedTypeGroups: [typeGroup]);
+    if (picked == null) return null;
+    final data = await picked.readAsBytes();
+    if (data.length < 4096) throw const FormatException('文件太小，可能不是字体');
+
+    final loader = FontLoader(family)
+      ..addFont(Future.value(ByteData.view(data.buffer)));
+    await loader.load();
+    bytes = ByteData.view(data.buffer);
+    displayName = picked.name.replaceAll(RegExp(r'\.(ttf|otf)$', caseSensitive: false), '');
+    return displayName;
+  }
+
+  static Future<void> clear() async {
+    displayName = null;
+    bytes = null;
+  }
 }

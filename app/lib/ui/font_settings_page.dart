@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 
 import '../data/user_font.dart';
@@ -11,6 +12,29 @@ class FontSettingsPage extends StatefulWidget {
 
 class _FontSettingsPageState extends State<FontSettingsPage> {
   bool _busy = false;
+  bool _downloading = false;
+  double _progress = 0;
+
+  Future<void> _downloadRecommended() async {
+    setState(() {
+      _downloading = true;
+      _progress = 0;
+    });
+    try {
+      final name = await UserFont.downloadRecommended((v) {
+        if (mounted) setState(() => _progress = v);
+      });
+      if (!mounted) return;
+      setState(() => _downloading = false);
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('已安装「$name」')));
+    } catch (e) {
+      if (!mounted) return;
+      setState(() => _downloading = false);
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('下载失败：$e')));
+    }
+  }
 
   Future<void> _import() async {
     setState(() => _busy = true);
@@ -40,15 +64,84 @@ class _FontSettingsPageState extends State<FontSettingsPage> {
         Text('导入字体', style: Theme.of(context).textTheme.titleMedium),
         const SizedBox(height: 6),
         Text(
-          '硬笔行书、硬笔楷书这类字帖字体，通常不允许随应用分发。'
-          '在「设置」里导入你自己合法持有的 .ttf / .otf 文件即可使用，'
-          '文件只保存在本机。',
+          kIsWeb
+              ? '选择你本机合法持有的 .ttf / .otf 字体，浏览器内即时加载，'
+                  '不会上传到任何服务器；刷新后需重新选择。'
+              : '硬笔行书、硬笔楷书这类字帖字体，通常不允许随应用分发。'
+                  '在「设置」里导入你自己合法持有的 .ttf / .otf 文件即可使用，'
+                  '文件只保存在本机。',
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
                 color: scheme.onSurfaceVariant,
                 height: 1.7,
               ),
         ),
+        if (!kIsWeb) ...[
         const SizedBox(height: 20),
+        Text('推荐字体包', style: Theme.of(context).textTheme.titleSmall),
+        const SizedBox(height: 8),
+        Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: scheme.surfaceContainerLow,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Text('瑞美加张清平硬笔行书',
+                      style: Theme.of(context).textTheme.bodyMedium),
+                  const SizedBox(width: 8),
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                    decoration: BoxDecoration(
+                      color: scheme.secondaryContainer,
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: Text('免费商用',
+                        style: Theme.of(context).textTheme.labelSmall),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 6),
+              Text(
+                '张清平逐字书写 GB2312 全部 6763 字，中性笔行书。\n'
+                '原文件未经修改，点一下按需下载，不随安装包内置。',
+                style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                      color: scheme.onSurfaceVariant,
+                      height: 1.7,
+                    ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                '授权：作者声明免费商用，禁止修改再发布、禁止收费转售；'
+                '应用于软件/APP 属于原作者未明确的场景，请自行评估。',
+                style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                      color: scheme.outline,
+                      height: 1.6,
+                    ),
+              ),
+              const SizedBox(height: 12),
+              if (_downloading)
+                LinearProgressIndicator(
+                  value: _progress == 0 ? null : _progress,
+                )
+              else
+                FilledButton.tonalIcon(
+                  onPressed: _downloadRecommended,
+                  icon: const Icon(Icons.download, size: 18),
+                  label: const Text('下载并安装（10MB）'),
+                ),
+            ],
+          ),
+        ),
+        ],
+        const SizedBox(height: 24),
+        Text(kIsWeb ? '选择字体文件' : '自己的字体',
+            style: Theme.of(context).textTheme.titleSmall),
+        const SizedBox(height: 8),
         Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
