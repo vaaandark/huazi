@@ -21,6 +21,7 @@ class WorksheetOptions {
   final String fontAsset;
   final int cols;
   final int rows;
+  final ByteData? fontBytes; // 用户导入字体时直接给字节
 
   const WorksheetOptions({
     required this.text,
@@ -29,6 +30,7 @@ class WorksheetOptions {
     this.fontAsset = 'assets/fonts/wenkai.ttf',
     this.cols = 10,
     this.rows = 12,
+    this.fontBytes,
   });
 
   String get traceLabel => traceAlpha == 0
@@ -41,7 +43,7 @@ class WorksheetOptions {
 /// A4 字帖：每行练一个字，首格实写，其余描红/浅描/空白。
 class WorksheetPdf {
   static Future<Uint8List> build(WorksheetOptions opt) async {
-    final data = await rootBundle.load(opt.fontAsset);
+    final data = opt.fontBytes ?? await rootBundle.load(opt.fontAsset);
     final font = pw.Font.ttf(data);
     final doc = pw.Document();
 

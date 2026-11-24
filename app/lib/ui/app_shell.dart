@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'char_search_page.dart';
 import 'favorites_page.dart';
+import 'font_settings_page.dart';
 import 'worksheet_page.dart';
 import 'persons_page.dart';
 import 'works_page.dart';
@@ -137,6 +138,20 @@ class _MinePage extends StatelessWidget {
               builder: (_) => Scaffold(
                 appBar: AppBar(title: const Text('生字本')),
                 body: const FavoritesPage(),
+              ),
+            ),
+          ),
+        ),
+        ListTile(
+          leading: const Icon(Icons.font_download_outlined),
+          title: const Text('导入字体'),
+          subtitle: const Text('用自己合法持有的硬笔行书/楷书'),
+          trailing: const Icon(Icons.chevron_right),
+          onTap: () => Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => Scaffold(
+                appBar: AppBar(title: const Text('导入字体')),
+                body: const FontSettingsPage(),
               ),
             ),
           ),

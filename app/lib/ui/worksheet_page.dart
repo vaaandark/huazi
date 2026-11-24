@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../pdf/worksheet_pdf.dart';
+import '../data/user_font.dart';
 import '../util/save_pdf.dart';
 import 'widgets/worksheet_preview.dart';
 
@@ -53,6 +54,7 @@ class _WorksheetPageState extends State<WorksheetPage> {
           grid: _grid,
           traceAlpha: _trace,
           fontAsset: _font,
+          fontBytes: _font == 'user' ? UserFont.bytes : null,
         ),
       );
       final now = DateTime.now();
@@ -150,7 +152,9 @@ class _WorksheetPageState extends State<WorksheetPage> {
           children: [
             for (final (label, v) in [
               ('硬笔楷 · 文楷', 'assets/fonts/wenkai.ttf'),
-              ('硬笔行书 · 志莽', 'assets/fonts/xingshu.ttf'),
+              ('毛笔行书 · 志莽', 'assets/fonts/xingshu.ttf'),
+              if (UserFont.available)
+                ('我的字体 · ${UserFont.displayName ?? ""}', 'user'),
             ])
               ChoiceChip(
                 label: Text(label),
@@ -164,9 +168,11 @@ class _WorksheetPageState extends State<WorksheetPage> {
           text: _text.text,
           grid: _grid,
           traceAlpha: _trace,
-          fontFamily: _font.contains('xingshu')
-              ? 'XingShu'
-              : 'WenKai',
+          fontFamily: _font == 'user'
+              ? UserFont.family
+              : _font.contains('xingshu')
+                  ? 'XingShu'
+                  : 'WenKai',
         ),
         const SizedBox(height: 24),
         FilledButton.icon(

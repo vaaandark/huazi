@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'data/favorites.dart';
 import 'data/repository.dart';
+import 'data/user_font.dart';
 import 'ui/app_shell.dart';
 import 'ui/theme.dart';
 
@@ -9,6 +10,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Repository.init();
   await Favorites.init();
+  await UserFont.restore();
   runApp(const HuaziApp());
 }
 

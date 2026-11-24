@@ -15,7 +15,7 @@ Android 与桌面端共用一套 Flutter 代码，数据全部内置，**断网�
 
 **单字页**
 - 6763 字：笔顺分步演示（可自动播放）、笔画数、结构类型、部件分解、部首、拼音
-- 两种写法并排对比：硬笔楷（文楷）· 硬笔行书（志莽）
+- 硬笔楷（文楷）与毛笔行书（志莽）对比；可另导入自己的硬笔行书字体
 - 篆书 · 隶书字形（1.2 万字形，覆盖 4719 字，按需下载 37MB 字形包）
 - 田字格 / 米字格切换
 
@@ -28,6 +28,7 @@ Android 与桌面端共用一套 Flutter 代码，数据全部内置，**断网�
 
 **其他**
 - 生字本（收藏常练的字）
+- **导入自己的字体**：硬笔行书等字帖字体通常禁止随应用分发，用户可导入本机字体，用于预览、字帖与临摹
 - 数字临摹：半透明范字上直接写
 - 手机底部导航 / 桌面主从分栏自适应
 
@@ -113,7 +114,7 @@ huazi/
 | 篆隶字形 | [hanzi-glyphs-svg](https://github.com/zhouyongh/hanzi-glyphs-svg) | CC0 / OFL 1.1 |
 | 笔顺 | [hanzi-writer-data](https://github.com/chanind/hanzi-writer-data) | Arphic Public License |
 | 结构/部件 | [Make Me a Hanzi](https://github.com/skishore/makemeahanzi) | LGPL / Arphic |
-| 字体 | LXGW 文楷 GB（硬笔楷）、志莽行书（硬笔行书） | SIL OFL 1.1 |
+| 字体 | LXGW 文楷 GB（硬笔楷）、志莽行书（毛笔行书） | SIL OFL 1.1 |
 
 代码以 MIT 释出；数据另有许可，详见 [NOTICE.md](NOTICE.md)。
 部分碑帖图像为 **CC BY-NC 4.0**，本项目仅作个人练习与非商业用途。

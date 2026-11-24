@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import '../data/ancient_pack.dart';
 import '../data/favorites.dart';
+import '../data/user_font.dart';
 import '../data/char_repo.dart';
 import 'trace_page.dart';
 import 'widgets/practice_grid.dart';
@@ -390,7 +391,11 @@ class _CharPageState extends State<CharPage> {
           children: [
             _fontTile(context, 'wenkai', '硬笔楷 · 文楷'),
             const SizedBox(width: 10),
-            _fontTile(context, 'xingshu', '硬笔行书 · 志莽'),
+            _fontTile(context, 'xingshu', '毛笔行书 · 志莽'),
+            if (UserFont.available) ...[
+              const SizedBox(width: 10),
+              _fontTile(context, 'user', UserFont.displayName ?? '我的字体'),
+            ],
           ],
         ),
         const SizedBox(height: 20),
@@ -405,6 +410,7 @@ class _CharPageState extends State<CharPage> {
     final f = switch (family) {
       'wenkai' => 'WenKai',
       'xingshu' => 'XingShu',
+      'user' => 'UserFont',
       _ => null,
     };
     return Expanded(
