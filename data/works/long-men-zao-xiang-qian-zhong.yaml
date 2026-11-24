@@ -2,7 +2,7 @@ id: long-men-zao-xiang-qian-zhong
 title: 龙门造像千种
 aliases: []
 author: 日本
-dynasty: 民国
+dynasty: 北魏
 carrier: zaoxiang
 holder: 东京大学图书馆
 rubbing: 初拓本
@@ -102,3 +102,4 @@ sources:
   retrieved: '2026-11-25'
 status: draft
 notes: shuge_id=187342
+script: kai

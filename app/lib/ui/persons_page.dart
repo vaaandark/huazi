@@ -36,16 +36,11 @@ class _PersonsPageState extends State<PersonsPage> {
           ),
           trailing: const Icon(Icons.chevron_right),
           onTap: () {
-            final works = Repository.instance.works(
-              filter: WorkFilter(query: p.name),
-            );
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (_) => Scaffold(
                   appBar: AppBar(title: Text(p.name)),
-                  body: works.isEmpty
-                      ? const Center(child: Text('暂无作品'))
-                      : WorksPage(initialWorkId: works.first.id),
+                  body: WorksPage(initialQuery: p.name),
                 ),
               ),
             );

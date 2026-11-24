@@ -7,7 +7,7 @@ Android 与桌面端共用一套 Flutter 代码，数据全部内置，**断网�
 
 ## 功能
 
-**碑帖库**（44 种）
+**碑帖库**（42 种）
 - 按 书体 / 朝代 / 载体（碑刻·刻帖·墨迹·墓志…）三维筛选，支持搜索
 - 详情页大图翻页缩放，点图看联网高清原图
 - 书家、行数、满行字数、形制、收藏地、拓本类型
@@ -33,7 +33,9 @@ Android 与桌面端共用一套 Flutter 代码，数据全部内置，**断网�
 
 ## 截图
 
-> 见 [docs/screenshots](docs/screenshots)
+| 碑帖库（桌面） | 单字页 | 字帖预览 |
+|---|---|---|
+| ![](docs/screenshots/01-works-desktop.png) | ![](docs/screenshots/03-char.png) | ![](docs/screenshots/04-worksheet.png) |
 
 ## 在线试用
 
