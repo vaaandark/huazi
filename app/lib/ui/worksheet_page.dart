@@ -91,8 +91,6 @@ class _WorksheetPageState extends State<WorksheetPage> {
     return ListView(
       padding: const EdgeInsets.fromLTRB(20, 16, 20, 40),
       children: [
-        Text('练字', style: Theme.of(context).textTheme.titleLarge),
-        const SizedBox(height: 4),
         Text(
           '只想看字怎么写，用「横排 / 竖排」；要打印出来练，用「字帖」并导出 PDF。',
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
