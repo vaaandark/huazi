@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'char_search_page.dart';
+import 'favorites_page.dart';
 import 'worksheet_page.dart';
 import 'persons_page.dart';
 import 'works_page.dart';
@@ -125,27 +126,37 @@ class _MinePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView(
-      children: const [
+      children: [
         ListTile(
-          leading: Icon(Icons.bookmark_border),
-          title: Text('生字本'),
-          subtitle: Text('M4 加入'),
+          leading: const Icon(Icons.bookmark_border),
+          title: const Text('生字本'),
+          subtitle: const Text('收藏常练的字'),
+          trailing: const Icon(Icons.chevron_right),
+          onTap: () => Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => Scaffold(
+                appBar: AppBar(title: const Text('生字本')),
+                body: const FavoritesPage(),
+              ),
+            ),
+          ),
         ),
         ListTile(
-          leading: Icon(Icons.edit_outlined),
-          title: Text('数字临摹'),
-          subtitle: Text('M4 加入'),
+          leading: const Icon(Icons.edit_outlined),
+          title: const Text('数字临摹'),
+          subtitle: const Text('单字页右上角的笔形图标进入'),
+          onTap: null,
         ),
-        Divider(),
-        ListTile(
+        const Divider(),
+        const ListTile(
           leading: Icon(Icons.info_outline),
           title: Text('数据来源'),
-          subtitle: Text('书格 shuge.org · 字形库 hanzi-glyphs-svg · OFL 字体'),
+          subtitle: Text('书格 shuge.org · hanzi-glyphs-svg · Make Me a Hanzi · OFL 字体'),
         ),
-        ListTile(
+        const ListTile(
           leading: Icon(Icons.verified_outlined),
           title: Text('版本'),
-          subtitle: Text('0.1.0 (M1)'),
+          subtitle: Text('0.3.0 (M3 / M4)'),
         ),
       ],
     );

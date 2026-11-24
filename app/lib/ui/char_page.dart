@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../data/ancient_pack.dart';
+import '../data/favorites.dart';
 import '../data/char_repo.dart';
+import 'trace_page.dart';
 import 'widgets/practice_grid.dart';
 
 class CharPage extends StatefulWidget {
@@ -71,6 +73,29 @@ class _CharPageState extends State<CharPage> {
       appBar: AppBar(
         title: Text(widget.char),
         actions: [
+          IconButton(
+            tooltip: '临摹',
+            icon: const Icon(Icons.edit_outlined),
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => TracePage(char: widget.char)),
+            ),
+          ),
+          IconButton(
+            tooltip: Favorites.instance.contains(widget.char) ? '移出生字本' : '加入生字本',
+            icon: Icon(
+              Favorites.instance.contains(widget.char)
+                  ? Icons.bookmark
+                  : Icons.bookmark_border,
+            ),
+            onPressed: () async {
+              final added = await Favorites.instance.toggle(widget.char);
+              if (!mounted) return;
+              setState(() {});
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(added ? '已加入生字本' : '已移出生字本')),
+              );
+            },
+          ),
           IconButton(
             tooltip: _mi ? '切换田字格' : '切换米字格',
             icon: Icon(_mi ? Icons.grid_4x4 : Icons.grid_3x3),

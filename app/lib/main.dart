@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'data/favorites.dart';
 import 'data/repository.dart';
 import 'ui/app_shell.dart';
 import 'ui/theme.dart';
@@ -7,6 +8,7 @@ import 'ui/theme.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Repository.init();
+  await Favorites.init();
   runApp(const HuaziApp());
 }
 
