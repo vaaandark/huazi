@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../pdf/worksheet_pdf.dart';
 import '../util/save_pdf.dart';
+import 'widgets/worksheet_preview.dart';
 
 class WorksheetPage extends StatefulWidget {
   const WorksheetPage({super.key});
@@ -147,6 +148,13 @@ class _WorksheetPageState extends State<WorksheetPage> {
                 onSelected: (_) => setState(() => _font = v),
               ),
           ],
+        ),
+        const SizedBox(height: 24),
+        WorksheetPreview(
+          text: _text.text,
+          grid: _grid,
+          traceAlpha: _trace,
+          fontFamily: _font.contains('xingkai') ? 'XingKai' : 'WenKai',
         ),
         const SizedBox(height: 24),
         FilledButton.icon(

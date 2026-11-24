@@ -3,6 +3,7 @@ name: build
 on:
   push:
     branches: [main]
+  pull_request:
   workflow_dispatch:
 
 jobs:
@@ -26,13 +27,21 @@ jobs:
           channel: stable
           cache: true
 
-      - name: Build
+      - name: Test
         shell: bash
         run: |
           cd app
           flutter pub get
+          flutter test
+
+      - name: Build
+        shell: bash
+        run: |
+          cd app
+          # macOS 的 release 构建需要开发者证书；CI 上没有，
+          # 因此用 debug（ad-hoc 签名），产物足以冒烟验证。
           if [ "${{ matrix.target }}" = "macos" ]; then
-            flutter build macos --release --no-codesign
+            flutter build macos --debug
           else
             flutter build ${{ matrix.target }} --release
           fi
@@ -63,10 +72,15 @@ jobs:
           channel: stable
           cache: true
 
-      - name: Build APK
+      - name: Test
         run: |
           cd app
           flutter pub get
+          flutter test
+
+      - name: Build APK
+        run: |
+          cd app
           flutter build apk --release --split-per-abi
 
       - uses: actions/upload-artifact@v4
