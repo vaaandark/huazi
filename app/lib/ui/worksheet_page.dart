@@ -32,6 +32,8 @@ class _WorksheetPageState extends State<WorksheetPage> {
   int _mode = 0; // 0 横排 / 1 竖排 / 2 字帖
   bool _sheetVertical = false;
   bool _guideLine = false;
+  int _cols = 10;
+  int _rows = 12;
   double _size = 40;
 
   static const _common =
@@ -62,6 +64,8 @@ class _WorksheetPageState extends State<WorksheetPage> {
           fontBytes: _font == 'user' ? UserFont.bytes : null,
           vertical: _sheetVertical,
           guideLine: _guideLine,
+          cols: _cols,
+          rows: _rows,
         ),
       );
       final now = DateTime.now();
@@ -150,6 +154,51 @@ class _WorksheetPageState extends State<WorksheetPage> {
                   selected: _sheetVertical == v,
                   onSelected: (_) => setState(() => _sheetVertical = v),
                 ),
+            ],
+          ),
+        ],
+        if (_mode == 2) ...[
+          const SizedBox(height: 8),
+          Column(
+            children: [
+              Row(
+                children: [
+                  SizedBox(
+                    width: 76,
+                    child: Text('每行 ${_cols} 格',
+                        style: Theme.of(context).textTheme.labelMedium),
+                  ),
+                  Expanded(
+                    child: Slider(
+                      value: _cols.toDouble(),
+                      min: 4,
+                      max: 14,
+                      divisions: 10,
+                      label: '$_cols',
+                      onChanged: (v) => setState(() => _cols = v.round()),
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  SizedBox(
+                    width: 76,
+                    child: Text('每页 ${_rows} 行',
+                        style: Theme.of(context).textTheme.labelMedium),
+                  ),
+                  Expanded(
+                    child: Slider(
+                      value: _rows.toDouble(),
+                      min: 6,
+                      max: 18,
+                      divisions: 12,
+                      label: '$_rows',
+                      onChanged: (v) => setState(() => _rows = v.round()),
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
         ],
@@ -254,6 +303,8 @@ class _WorksheetPageState extends State<WorksheetPage> {
             fontFamily: _familyName,
             vertical: _sheetVertical,
             guideLine: _guideLine,
+            cols: _cols,
+            rows: _rows,
           )
         else
           TextPreview(
