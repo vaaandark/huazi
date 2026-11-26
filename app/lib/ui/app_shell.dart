@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 import 'char_search_page.dart';
+import '../data/app_info.dart';
 import '../data/favorites.dart';
+import '../data/settings.dart';
 import 'favorites_page.dart';
 import 'font_settings_page.dart';
 import 'worksheet_page.dart';
@@ -151,6 +153,25 @@ class _MinePage extends StatelessWidget {
           ),
         ),
         ListTile(
+          leading: const Icon(Icons.brightness_6_outlined),
+          title: const Text('主题'),
+          subtitle: const Text('跟随系统 / 浅色 / 深色'),
+          trailing: ValueListenableBuilder<ThemeMode>(
+            valueListenable: AppSettings.themeMode,
+            builder: (context, mode, _) => SegmentedButton<ThemeMode>(
+              showSelectedIcon: false,
+              style: const ButtonStyle(visualDensity: VisualDensity.compact),
+              segments: const [
+                ButtonSegment(value: ThemeMode.system, label: Text('系统')),
+                ButtonSegment(value: ThemeMode.light, label: Text('浅色')),
+                ButtonSegment(value: ThemeMode.dark, label: Text('深色')),
+              ],
+              selected: {mode},
+              onSelectionChanged: (s) => AppSettings.setThemeMode(s.first),
+            ),
+          ),
+        ),
+        ListTile(
           leading: const Icon(Icons.font_download_outlined),
           title: const Text('导入字体'),
           subtitle: const Text('用自己合法持有的硬笔行书/楷书'),
@@ -176,10 +197,16 @@ class _MinePage extends StatelessWidget {
           title: Text('数据来源'),
           subtitle: Text('书格 shuge.org · hanzi-glyphs-svg · Make Me a Hanzi · OFL 字体'),
         ),
-        const ListTile(
-          leading: Icon(Icons.verified_outlined),
-          title: Text('版本'),
-          subtitle: Text('0.3.0 (M3 / M4)'),
+        ListTile(
+          leading: const Icon(Icons.verified_outlined),
+          title: const Text('版本'),
+          subtitle: Text(AppInfo.label),
+          onTap: () => showAboutDialog(
+            context: context,
+            applicationName: '字 · huazi',
+            applicationVersion: AppInfo.label,
+            applicationLegalese: 'MIT License · 数据与字体许可见 NOTICE.md',
+          ),
         ),
       ],
     );

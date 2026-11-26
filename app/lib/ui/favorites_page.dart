@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../data/favorites.dart';
 import 'char_page.dart';
+import 'worksheet_page.dart';
 
 class FavoritesPage extends StatefulWidget {
   const FavoritesPage({super.key});
@@ -31,6 +32,26 @@ class _FavoritesPageState extends State<FavoritesPage> {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
+        Row(
+          children: [
+            Text('${_chars.length} 个字',
+                style: Theme.of(context).textTheme.labelMedium),
+            const Spacer(),
+            FilledButton.tonalIcon(
+              onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => Scaffold(
+                    appBar: AppBar(title: const Text('练这些字')),
+                    body: WorksheetPage(initialText: _chars.join()),
+                  ),
+                ),
+              ),
+              icon: const Icon(Icons.edit_note, size: 18),
+              label: const Text('用这些字练字'),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
         Wrap(
           spacing: 10,
           runSpacing: 10,
