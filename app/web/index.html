@@ -42,6 +42,36 @@
   <link rel="icon" type="image/png" href="favicon.png"/>
 
   <title>字 · huazi</title>
+
+  <script>
+    // 部署后清理旧的 Service Worker / 缓存，避免浏览器继续用上一版资源导致白屏。
+    // 每个版本改一次 V 即可；清理完成会自刷新一次。
+    (function () {
+      try {
+        var V = '2026-11-27';
+        var KEY = 'huazi.cache.version';
+        if (localStorage.getItem(KEY) === V) return;
+        var regs = [];
+        if ('serviceWorker' in navigator) {
+          regs.push(navigator.serviceWorker.getRegistrations()
+            .then(function (rs) {
+              return Promise.all(rs.map(function (r) { return r.unregister(); }))
+                .then(function () { return rs.length; });
+            }).catch(function () { return 0; }));
+        }
+        if (window.caches && caches.keys) {
+          regs.push(caches.keys().then(function (ks) {
+            return Promise.all(ks.map(function (k) { return caches.delete(k); }));
+          }).catch(function () {}));
+        }
+        Promise.all(regs).then(function (r) {
+          localStorage.setItem(KEY, V);
+          if (r[0]) location.reload();
+        });
+      } catch (e) { /* 忽略 */ }
+    })();
+  </script>
+
   <link rel="manifest" href="manifest.json">
 </head>
 <body>
