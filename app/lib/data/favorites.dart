@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// 生字本：本地收藏的字，持久化在 SharedPreferences。
@@ -8,6 +9,9 @@ class Favorites {
 
   static Favorites? _instance;
   static Favorites get instance => _instance!;
+
+  /// 收藏变化时自增，界面用 ListenableBuilder 监听
+  static final ValueNotifier<int> revision = ValueNotifier(0);
 
   static Future<Favorites> init() async {
     if (_instance != null) return _instance!;
@@ -28,11 +32,13 @@ class Favorites {
       _chars.remove(ch);
     }
     await _prefs.setStringList('favorite_chars', _chars);
+    revision.value++;
     return added;
   }
 
   Future<void> remove(String ch) async {
     _chars.remove(ch);
     await _prefs.setStringList('favorite_chars', _chars);
+    revision.value++;
   }
 }

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import 'dart:math';
+
+import '../data/char_repo.dart';
 import '../data/repository.dart';
 import 'char_page.dart';
 
@@ -14,6 +17,22 @@ class _CharSearchPageState extends State<CharSearchPage> {
   final _controller = TextEditingController();
   final List<String> _recent = [];
   late final List<String> _quick = _loadQuick();
+  String _today = '永';
+
+  @override
+  void initState() {
+    super.initState();
+    final days = DateTime.now().difference(DateTime(2020, 1, 1)).inDays;
+    _today = _charAtOffset(days % 3755);
+  }
+
+  String _charAtOffset(int offset) {
+    final rows = Repository.instance.select(
+      'SELECT ch FROM char ORDER BY cp LIMIT 1 OFFSET ?',
+      [offset],
+    );
+    return rows.isEmpty ? '永' : rows.first['ch'] as String;
+  }
 
   List<String> _loadQuick() {
     final rows = Repository.instance.select(
@@ -40,6 +59,66 @@ class _CharSearchPageState extends State<CharSearchPage> {
     );
   }
 
+
+  Widget _todayCard(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final info = CharRepository.info(_today);
+    return Container(
+      padding: const EdgeInsets.fromLTRB(16, 14, 12, 14),
+      decoration: BoxDecoration(
+        color: scheme.surfaceContainerLow,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: scheme.outlineVariant),
+      ),
+      child: Row(
+        children: [
+          InkWell(
+            onTap: () => _open(_today),
+            borderRadius: BorderRadius.circular(8),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+              child: Text(
+                _today,
+                style: const TextStyle(fontFamily: 'WenKai', fontSize: 56, height: 1.2),
+              ),
+            ),
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('今日一字',
+                    style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                          color: scheme.primary,
+                          letterSpacing: 1,
+                        )),
+                const SizedBox(height: 4),
+                Text(
+                  [
+                    if (info?.pinyin != null) info!.pinyin!,
+                    if (info?.structureLabel != null) info!.structureLabel,
+                    if (info?.strokes != null) '${info!.strokes} 画',
+                  ].join(' · '),
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: scheme.onSurfaceVariant,
+                      ),
+                ),
+              ],
+            ),
+          ),
+          TextButton(
+            onPressed: () {
+              final next = _charAtOffset(Random().nextInt(3755));
+              setState(() => _today = next);
+            },
+            child: const Text('换一个'),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
@@ -54,6 +133,8 @@ class _CharSearchPageState extends State<CharSearchPage> {
                 color: scheme.onSurfaceVariant,
               ),
         ),
+        const SizedBox(height: 16),
+        _todayCard(context),
         const SizedBox(height: 16),
         TextField(
           controller: _controller,

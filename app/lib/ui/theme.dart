@@ -29,6 +29,8 @@ class InkTheme {
       useMaterial3: true,
       colorScheme: scheme,
       scaffoldBackgroundColor: bg,
+      // 内置文楷作为全局 UI 字体：网页版不必依赖下载 Noto 兜底
+      fontFamily: 'WenKai',
       cardTheme: CardThemeData(
         elevation: 0,
         color: scheme.surfaceContainerLow,

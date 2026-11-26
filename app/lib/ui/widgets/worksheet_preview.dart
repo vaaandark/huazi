@@ -14,6 +14,7 @@ class WorksheetPreview extends StatefulWidget {
     this.cols = 10,
     this.rows = 12,
     this.vertical = false,
+    this.guideLine = false,
   });
 
   final String text;
@@ -23,6 +24,7 @@ class WorksheetPreview extends StatefulWidget {
   final int cols;
   final int rows;
   final bool vertical;
+  final bool guideLine;
 
   @override
   State<WorksheetPreview> createState() => _WorksheetPreviewState();
@@ -189,11 +191,40 @@ class _WorksheetPreviewState extends State<WorksheetPreview> {
             ),
     );
 
-    if (widget.grid == GridStyle.plain) return content;
+    final withGuide = Stack(
+      fit: StackFit.expand,
+      children: [
+        content,
+        if (widget.vertical && widget.guideLine)
+          CustomPaint(painter: _GuidePainter()),
+      ],
+    );
+    if (widget.grid == GridStyle.plain) return withGuide;
     return PracticeGrid(
       mi: widget.grid == GridStyle.mi,
       color: const Color(0x33B2412E),
-      child: content,
+      child: withGuide,
     );
   }
+}
+
+
+class _GuidePainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = const Color(0x66C08A80)
+      ..strokeWidth = 0.8;
+    const dash = 4.0;
+    const gap = 3.0;
+    var y = 0.0;
+    while (y < size.height) {
+      final end = (y + dash).clamp(0.0, size.height).toDouble();
+      canvas.drawLine(Offset(size.width / 2, y), Offset(size.width / 2, end), paint);
+      y += dash + gap;
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

@@ -31,6 +31,7 @@ class _WorksheetPageState extends State<WorksheetPage> {
   bool _busy = false;
   int _mode = 0; // 0 横排 / 1 竖排 / 2 字帖
   bool _sheetVertical = false;
+  bool _guideLine = false;
   double _size = 40;
 
   static const _common =
@@ -60,6 +61,7 @@ class _WorksheetPageState extends State<WorksheetPage> {
           fontAsset: _font,
           fontBytes: _font == 'user' ? UserFont.bytes : null,
           vertical: _sheetVertical,
+          guideLine: _guideLine,
         ),
       );
       final now = DateTime.now();
@@ -151,6 +153,24 @@ class _WorksheetPageState extends State<WorksheetPage> {
             ],
           ),
         ],
+        if (_mode == 2 && _sheetVertical) ...[
+          const SizedBox(height: 12),
+          Row(
+            children: [
+              Text('行气线', style: Theme.of(context).textTheme.labelMedium),
+              Switch(
+                value: _guideLine,
+                onChanged: (v) => setState(() => _guideLine = v),
+              ),
+              Text(
+                '每列中间加一条竖虚线，练行书行气用',
+                style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
+              ),
+            ],
+          ),
+        ],
         const SizedBox(height: 16),
         _sectionTitle(context, '描红档位'),
         Wrap(
@@ -233,6 +253,7 @@ class _WorksheetPageState extends State<WorksheetPage> {
             traceAlpha: _trace,
             fontFamily: _familyName,
             vertical: _sheetVertical,
+            guideLine: _guideLine,
           )
         else
           TextPreview(

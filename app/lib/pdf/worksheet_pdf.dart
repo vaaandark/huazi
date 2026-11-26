@@ -23,6 +23,7 @@ class WorksheetOptions {
   final int rows;
   final ByteData? fontBytes; // 用户导入字体时直接给字节
   final bool vertical; // true = 竖排（每列一字，从右往左）
+  final bool guideLine; // 竖排时每列中间画一条虚线（行气线）
 
   const WorksheetOptions({
     required this.text,
@@ -33,6 +34,7 @@ class WorksheetOptions {
     this.rows = 12,
     this.fontBytes,
     this.vertical = false,
+    this.guideLine = false,
   });
 
   String get traceLabel => traceAlpha == 0
@@ -186,10 +188,11 @@ class WorksheetPdf {
       ),
       child: pw.Stack(
         children: [
-          if (opt.grid != GridStyle.plain)
+          if (opt.grid != GridStyle.plain || (opt.vertical && opt.guideLine))
             pw.Positioned.fill(
               child: pw.CustomPaint(
-                painter: (canvas, size) => _drawGrid(canvas, size, opt.grid),
+                painter: (canvas, size) =>
+                    _drawGrid(canvas, size, opt.grid, opt.vertical && opt.guideLine),
               ),
             ),
           if (ch.isNotEmpty && (isDemo || opt.traceAlpha > 0))
@@ -204,7 +207,12 @@ class WorksheetPdf {
     );
   }
 
-  static void _drawGrid(PdfGraphics canvas, PdfPoint size, GridStyle style) {
+  static void _drawGrid(
+    PdfGraphics canvas,
+    PdfPoint size,
+    GridStyle style,
+    bool guide,
+  ) {
     canvas
       ..setColor(PdfColors.grey400)
       ..setLineWidth(0.35);
@@ -221,6 +229,23 @@ class WorksheetPdf {
     if (style == GridStyle.mi) {
       line(0, 0, size.x, size.y);
       line(size.x, 0, 0, size.y);
+    }
+    if (guide) {
+      // 行气线：穿过格子中心的竖虚线
+      canvas
+        ..setColor(const PdfColor(0.74, 0.55, 0.52))
+        ..setLineWidth(0.6);
+      const dash = 3.0;
+      const gap = 2.5;
+      var y = 0.0;
+      while (y < size.y) {
+        final end = (y + dash).clamp(0.0, size.y).toDouble();
+        canvas
+          ..moveTo(size.x / 2, y)
+          ..lineTo(size.x / 2, end)
+          ..strokePath();
+        y += dash + gap;
+      }
     }
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'char_search_page.dart';
+import '../data/favorites.dart';
 import 'favorites_page.dart';
 import 'font_settings_page.dart';
 import 'worksheet_page.dart';
@@ -128,16 +129,23 @@ class _MinePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView(
       children: [
-        ListTile(
-          leading: const Icon(Icons.bookmark_border),
-          title: const Text('生字本'),
-          subtitle: const Text('收藏常练的字'),
-          trailing: const Icon(Icons.chevron_right),
-          onTap: () => Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (_) => Scaffold(
-                appBar: AppBar(title: const Text('生字本')),
-                body: const FavoritesPage(),
+        ListenableBuilder(
+          listenable: Favorites.revision,
+          builder: (context, _) => ListTile(
+            leading: const Icon(Icons.bookmark_border),
+            title: const Text('生字本'),
+            subtitle: Text(
+              Favorites.instance.chars.isEmpty
+                  ? '收藏常练的字'
+                  : '已收藏 ${Favorites.instance.chars.length} 个字',
+            ),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) => Scaffold(
+                  appBar: AppBar(title: const Text('生字本')),
+                  body: const FavoritesPage(),
+                ),
               ),
             ),
           ),
